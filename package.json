@@ -1,7 +1,7 @@
 {
   "name": "4470-express",
-  "version": "0.0.0",
-  "description": "TypeScript + Express API Server",
+  "version": "1.0.0",
+  "description": "4470 Capstone Project TypeScript + Express API Server",
   "author": "",
   "license": "ISC",
   "scripts": {
