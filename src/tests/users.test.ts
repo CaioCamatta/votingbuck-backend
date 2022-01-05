@@ -6,7 +6,7 @@ import userModel from '@models/users.model';
 import UserRoute from '@routes/users.route';
 
 afterAll(async () => {
-  await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
+  await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
 });
 
 describe('Testing Users', () => {
@@ -23,7 +23,7 @@ describe('Testing Users', () => {
   describe('[GET] /users/:id', () => {
     it('response statusCode 200 / findOne', () => {
       const userId = 1;
-      const findUser: User = userModel.find(user => user.id === userId);
+      const findUser: User = userModel.find((user) => user.id === userId);
       const usersRoute = new UserRoute();
       const app = new App([usersRoute]);
 
@@ -61,7 +61,7 @@ describe('Testing Users', () => {
   describe('[DELETE] /users/:id', () => {
     it('response statusCode 200 / deleted', () => {
       const userId = 1;
-      const deleteUser: User[] = userModel.filter(user => user.id !== userId);
+      const deleteUser: User[] = userModel.filter((user) => user.id !== userId);
       const usersRoute = new UserRoute();
       const app = new App([usersRoute]);
 

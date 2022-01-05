@@ -2,6 +2,7 @@
   "name": "4470-express",
   "version": "1.0.0",
   "description": "4470 Capstone Project TypeScript + Express API Server",
+  "repository": "https://github.com/CaioCamatta/4470-backend",
   "author": "",
   "license": "ISC",
   "scripts": {
