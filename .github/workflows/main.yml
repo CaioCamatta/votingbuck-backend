@@ -78,8 +78,8 @@ jobs:
           envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
           script: |
             ls -a
-            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $ECR_REGISTRY
+            docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 4470-backend_server
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker-compose up -d
