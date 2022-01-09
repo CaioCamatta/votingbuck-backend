@@ -7,7 +7,7 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./4470/nginx.conf:/etc/nginx/nginx.conf
     restart: 'unless-stopped'
     networks:
       - backend

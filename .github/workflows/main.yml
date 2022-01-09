@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.AWS_EC2_PEM }}
           port: 22
           source: 'docker-compose.yml,nginx.conf'
-          target: './'
+          target: './4470/'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -65,7 +65,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: executing remote ssh commands using password
+      - name: Executing SSH Commands on EC2
         uses: appleboy/ssh-action@master
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -78,6 +78,7 @@ jobs:
           envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
           script: |
             ls -a
+            cd 4470
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $ECR_REGISTRY
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 4470-backend_server
