@@ -16,6 +16,7 @@ services:
       context: ./
       target: production-build-stage
       dockerfile: Dockerfile
+    image: 4470-backend_server
     container_name: server
     ports:
       - '3000:3000'
