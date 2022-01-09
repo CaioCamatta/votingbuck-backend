@@ -1,6 +1,7 @@
 # compiled output
 .vscode
 /node_modules
+node_modules
 
 # code formatter
 .eslintrc
@@ -16,3 +17,6 @@ jest.config.js
 # docker
 Dockerfile
 docker-compose.yml
+
+# git
+.git

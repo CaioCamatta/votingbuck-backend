@@ -19,12 +19,15 @@ services:
     container_name: server
     ports:
       - '3000:3000'
-    volumes:
-      - ./:/app
-      - /app/node_modules
+    # volumes:
+      # - ./:/app
+      # - /app/node_modules
     restart: 'unless-stopped'
     networks:
       - backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
 
 networks:
   backend:
