@@ -16,7 +16,7 @@ describe('Testing Users', () => {
       const usersRoute = new UserRoute();
       const app = new App([usersRoute]);
 
-      return request(app.getServer()).get(`${usersRoute.path}`).expect(200, { data: findUser, message: 'findAll' });
+      return request(app.getServer()).get(`${usersRoute.path}`).expect(300, { data: findUser, message: 'findAll' });
     });
   });
 
