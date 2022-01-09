@@ -60,14 +60,12 @@ jobs:
     needs: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Pull images and deploy in EC2
-        env:
-          AWS_EC2_PEM: ${{ secrets.AWS_EC2_PEM  }}
-          AWS_EC2_PUBLIC_DNS: ${{ secrets.AWS_EC2_PUBLIC_DNS  }}
-          AWS_EC2_USERNAME: ${{ secrets.AWS_EC2_USERNAME  }}
-        run: |
-          pwd
-          echo "$AWS_EC2_PEM" > private_key.pem && chmod 400 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_DNS} '
-            ls -a
+      - name: executing remote ssh commands using password
+      - uses: appleboy/ssh-action@master
+      - with:
+          host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.AWS_EC2_PEM }}
+          script: |
+            whoami
+            ls -al
