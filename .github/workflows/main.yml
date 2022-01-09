@@ -37,30 +37,31 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-  Integration:
-    timeout-minutes: 3
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Create env file
-        env:
-          PLACEHOLDER: ${{ secrets.PLACEHOLDER }}
-        run: |
-          touch .env
-          echo PLACEHOLDER="$PLACEHOLDER" >> .env
-          ls -a
-          cat .env
-        shell: bash
-      - name: Start containers
-        run: docker-compose up -d
+  # Integration:
+  #   needs: Build
+  #   timeout-minutes: 3
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v1
+  #     - name: Create env file
+  #       env:
+  #         PLACEHOLDER: ${{ secrets.PLACEHOLDER }}
+  #       run: |
+  #         touch .env
+  #         echo PLACEHOLDER="$PLACEHOLDER" >> .env
+  #         ls -a
+  #         cat .env
+  #       shell: bash
+  #     - name: Start containers
+  #       run: docker-compose up -d
 
   Deployment:
-    needs: Integration
+    needs: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Git pull
+      - name: Pull images and deploy in EC2
         env:
           AWS_EC2_PEM: ${{ secrets.AWS_EC2_PEM  }}
           AWS_EC2_PUBLIC_DNS: ${{ secrets.AWS_EC2_PUBLIC_DNS  }}
@@ -69,9 +70,4 @@ jobs:
           pwd
           echo "$AWS_EC2_PEM" > private_key.pem && chmod 400 private_key.pem
           ssh -o StrictHostKeyChecking=no -i private_key.pem ${AWS_EC2_USERNAME}@${AWS_EC2_PUBLIC_DNS} '
-            cd {/path/to/your/project/directory} &&
-            git checkout main &&
-            git fetch --all &&
-            git reset --hard origin/main &&
-            git pull origin main &&
-            docker-compose up -d --build
+            ls -a
