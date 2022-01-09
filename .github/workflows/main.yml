@@ -82,4 +82,5 @@ jobs:
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 4470-backend_server
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+            docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
