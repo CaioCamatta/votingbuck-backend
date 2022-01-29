@@ -12,17 +12,20 @@ import swaggerUi from 'swagger-ui-express';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import pgPromise from 'pg-promise';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
+  public db: pgPromise.IDatabase<any>;
 
   constructor(routes: Routes[]) {
     this.app = express();
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'development';
 
+    this.initializeDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeSwagger();
@@ -32,7 +35,7 @@ class App {
   public listen() {
     this.app.listen(this.port, () => {
       logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
+      logger.info(`======= ENV: ${this.env} ========`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
     });
@@ -40,6 +43,22 @@ class App {
 
   public getServer() {
     return this.app;
+  }
+
+  private initializeDatabase() {
+    const pgp = pgPromise({
+      /* Initialization Options */
+    });
+    logger.info('Initializing Database');
+    const cn = {
+      host: process.env.POSTGRES_HOST,
+      port: parseInt(process.env.POSTGRES_PORT),
+      database: process.env.POSTGRES_DATABASE,
+      user: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      max: 30, // max connections
+    };
+    this.db = pgp(cn);
   }
 
   private initializeMiddlewares() {
