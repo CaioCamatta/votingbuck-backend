@@ -20,7 +20,8 @@ services:
     container_name: server
     ports:
       - '3000:3000'
-    # volumes:
+    volumes:
+      - ./.env:/.env
       # - ./:/app
       # - /app/node_modules
     restart: 'unless-stopped'

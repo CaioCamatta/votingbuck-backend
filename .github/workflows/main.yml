@@ -88,11 +88,11 @@ jobs:
             ls -a
             cd 4470
             echo "
-              POSTGRES_HOST = $POSTGRES_HOST
-              POSTGRES_PASSWORD = $POSTGRES_PASSWORD
-              POSTGRES_PORT = $POSTGRES_PORT
-              POSTGRES_USER = $POSTGRES_USER
-              POSTGRES_DATABASE = $POSTGRES_DATABASE
+            POSTGRES_HOST = $POSTGRES_HOST
+            POSTGRES_PASSWORD = $POSTGRES_PASSWORD
+            POSTGRES_PORT = $POSTGRES_PORT
+            POSTGRES_USER = $POSTGRES_USER
+            POSTGRES_DATABASE = $POSTGRES_DATABASE
             " > .env
 
       - name: Configure AWS credentials
