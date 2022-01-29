@@ -1,126 +1,69 @@
 tags:
-- name: users
-  description: users API
+  - name: Organizations
+    description: Organization API
 
 paths:
-# [GET] users
-  /users:
+  # [GET] organization/id
+  /organizations/{id}:
     get:
       tags:
-      - users
-      summary: Find All Users
-      responses:
-        200:
-          description: 'OK'
-        500:
-          description: 'Server Error'
-
-# [POST] users
-    post:
-      tags:
-      - users
-      summary: Add User
-      parameters:
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
-      responses:
-        201:
-          description: 'Created'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [GET] users/id
-  /users/{id}:
-    get:
-      tags:
-      - users
+        - Organizations
       summary: Find User By Id
       parameters:
-      - name: id
-        in: path
-        description: User Id
-        required: true
-        type: integer
+        - name: id
+          in: path
+          description: Organization Id
+          required: true
+          type: integer
+          schema:
+
       responses:
         200:
           description: 'OK'
-        409:
-          description: 'Conflict'
+          schema:
+            type: object
+            properties:
+              orgInfo:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 42
+                    name:
+                      type: string
+                      example: Walmart
+                    industry:
+                      type: string
+                      example: school
+              donationsByMonth:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    month_start_date:
+                      type: string
+                      example: 2012-12-01T00:00:00.000Z
+                    amount_donated:
+                      type: float
+                      example: 12345.67
+              topDonators:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    contributor:
+                      type: string
+                      example: John Smith
+                    total_amount:
+                      type: float
+                      example: 12345.67
+        404:
+          description: 'Not Found'
         500:
           description: 'Server Error'
-
-# [PUT] users/id
-    put:
-      tags:
-      - users
-      summary: Update User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: integer
-      - name: body
-        in: body
-        description: user Data
-        required: true
-        schema:
-          $ref: '#/definitions/users'
-      responses:
-        200:
-          description: 'OK'
-        400:
-          description: 'Bad Request'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# [DELETE] users/id
-    delete:
-      tags:
-      - users
-      summary: Delete User By Id
-      parameters:
-      - name: id
-        in: path
-        description: user Id
-        required: true
-        type: integer
-      responses:
-        200:
-          description: 'OK'
-        409:
-          description: 'Conflict'
-        500:
-          description: 'Server Error'
-
-# definitions
-definitions:
-  users:
-    type: object
-    required:
-        - email
-        - password
-    properties:
-      id:
-        type: integer
-        description: user Id
-      email:
-        type: string
-        description: user Email
-      password:
-        type: string
-        description: user Password
 
 schemes:
- - https
- - http
+  - https
+  - http
