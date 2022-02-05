@@ -59,7 +59,7 @@ jobs:
         run: npm test
 
   Deploy:
-    needs: Build
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
