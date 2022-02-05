@@ -1,8 +1,6 @@
-export interface Organization {
-  id: string;
-  name: string;
-  industry: string;
-}
+import { organization } from '@prisma/client';
+
+export type Organization = organization;
 
 export interface DonationsByMonth {
   month_start_date: string;

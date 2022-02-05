@@ -12,13 +12,13 @@ import swaggerUi from 'swagger-ui-express';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
-import pgPromise from 'pg-promise';
+import { PrismaClient } from '@prisma/client';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
-  public db: pgPromise.IDatabase<any>;
+  public db: PrismaClient;
 
   constructor(routes: Routes[]) {
     this.app = express();
@@ -46,19 +46,7 @@ class App {
   }
 
   private initializeDatabase() {
-    const pgp = pgPromise({
-      /* Initialization Options */
-    });
-    logger.info('Initializing Database');
-    const cn = {
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT),
-      database: process.env.POSTGRES_DATABASE,
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      max: 30, // max connections
-    };
-    this.db = pgp(cn);
+    this.db = new PrismaClient();
   }
 
   private initializeMiddlewares() {

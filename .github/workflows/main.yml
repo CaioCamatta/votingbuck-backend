@@ -83,17 +83,11 @@ jobs:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_PEM }}
-          envs: POSTGRES_HOST,POSTGRES_PASSWORD,POSTGRES_PORT,POSTGRES_USER,POSTGRES_DATABASE
+          envs: DATABASE_URL
           script: |
             ls -a
             cd 4470
-            echo "
-            POSTGRES_HOST = $POSTGRES_HOST
-            POSTGRES_PASSWORD = $POSTGRES_PASSWORD
-            POSTGRES_PORT = $POSTGRES_PORT
-            POSTGRES_USER = $POSTGRES_USER
-            POSTGRES_DATABASE = $POSTGRES_DATABASE
-            " > .env
+            echo "DATABASE_URL = $DATABASE_URL" > .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
