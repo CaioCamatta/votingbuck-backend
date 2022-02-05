@@ -11,9 +11,18 @@ Express.js API. Features:
 - Swagger for pretty API (available under route /api-docs)
 
 Deployment:
- - On AWS EC2
- - Nginx (as reverse proxy, load balancer)
- - Multi-stage Docker & Docker compose
- - CI/CD for automatic test, build, and deployment
+
+- On AWS EC2
+- Nginx (as reverse proxy, load balancer)
+- Multi-stage Docker & Docker compose
+- CI/CD for automatic test, build, and deployment
 
 Based on this boilerplate: https://github.com/ljlm0402/typescript-express-starter
+
+### Database Changes:
+
+According to the [Prisma docs](https://www.prisma.io/docs/getting-started/setup-prisma/add-to-existing-project/relational-databases/next-steps-typescript-postgres), whenever you change the database schema, you must
+
+1.  Re-introspect your database with `npx prisma db pull`
+2.  Optionally re-configure your Prisma client (`schema.prisma`)
+3.  Re-generate Prisma Client with `npx prisma generate`
