@@ -12,7 +12,7 @@ class OrganizationRoute implements Routes {
   }
 
   private initializeRoutes() {
-    /**
+    /** GET data to populate an organization's dashboard.
      * @openapi
      * /organizations/{id}:
      *    get:
@@ -88,7 +88,6 @@ class OrganizationRoute implements Routes {
      *        500:
      *          description: 'Server Error'
      */
-    /* GET data to populate an organization's dashboard. */
     this.router.get(`${this.path}/:id(\\w+)`, this.orgController.getOrganizationData);
   }
 }
