@@ -54,7 +54,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          ls -a
+          touch .env
           echo "DATABASE_URL = $DATABASE_URL" > .env
           cat .env
 
