@@ -53,7 +53,10 @@ jobs:
       - name: Set up environment variables
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: echo "DATABASE_URL = $DATABASE_URL" > .env
+        run: |
+          ls -a
+          echo "DATABASE_URL = $DATABASE_URL" > .env
+          cat .env
 
       - name: Run tests
         run: npm test
