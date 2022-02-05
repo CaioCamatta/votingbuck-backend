@@ -9,24 +9,7 @@ on:
       - master
 
 jobs:
-  Test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
   Build:
-    needs: Test
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +36,28 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+  Test:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up environment variables
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: echo "DATABASE_URL = $DATABASE_URL" > .env
+
+      - name: Run tests
+        run: npm test
+
   Deploy:
     needs: Build
     runs-on: ubuntu-latest
@@ -73,11 +78,7 @@ jobs:
       - name: Create .env file in EC2
         uses: appleboy/ssh-action@master
         env:
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_DATABASE: ${{ secrets.POSTGRES_DATABASE }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
         with:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
