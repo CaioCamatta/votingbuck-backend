@@ -14,6 +14,6 @@ export interface TopDonators {
 }
 [];
 export interface DonationsByParty {
-  total_amount: number;
   party: string;
+  total_amount: number;
 }

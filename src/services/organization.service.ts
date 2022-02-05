@@ -42,8 +42,8 @@ class OrganizationService {
       // DonationsByParty
       await app.db.$queryRaw<DonationsByParty>(Prisma.sql`
           SELECT
-            SUM(amount)::float as total_amount,
-            party
+            party,
+            SUM(amount)::float as total_amount
           FROM donation as d
           JOIN recipient as r
             ON d.rec_id = r.id
