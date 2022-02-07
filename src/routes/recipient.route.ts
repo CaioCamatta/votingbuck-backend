@@ -5,7 +5,7 @@ import { Routes } from '@interfaces/routes.interface';
 class RecipientRoute implements Routes {
   public path = '/recipients';
   public router = Router();
-  public orgController = new RecipientController();
+  public recController = new RecipientController();
 
   constructor() {
     this.initializeRoutes();
@@ -36,7 +36,7 @@ class RecipientRoute implements Routes {
      *              schema:
      *                type: object
      *                properties:
-     *                  orgInfo:
+     *                  recInfo:
      *                    type: array
      *                    items:
      *                      type: object
@@ -46,10 +46,13 @@ class RecipientRoute implements Routes {
      *                          example: 42
      *                        name:
      *                          type: string
-     *                          example: Duke University
-     *                        industry:
+     *                          example: Donald trump
+     *                        ideology:
+     *                          type: float
+     *                          example: -0.15
+     *                        party:
      *                          type: string
-     *                          example: school
+     *                          example: "Republican Party"
      *                  donationsByMonth:
      *                    type: array
      *                    items:
@@ -66,20 +69,9 @@ class RecipientRoute implements Routes {
      *                    items:
      *                      type: object
      *                      properties:
-     *                        contributor:
+     *                        name:
      *                          type: string
-     *                          example: John Smith
-     *                        total_amount:
-     *                          type: float
-     *                          example: 12345.67
-     *                  donationsByParty:
-     *                    type: array
-     *                    items:
-     *                      type: object
-     *                      properties:
-     *                        party:
-     *                          type: string
-     *                          example: Independent
+     *                          example: Walmart
      *                        total_amount:
      *                          type: float
      *                          example: 12345.67
@@ -88,7 +80,7 @@ class RecipientRoute implements Routes {
      *        500:
      *          description: 'Server Error'
      */
-    this.router.get(`${this.path}/:id(\\w+)`, this.orgController.getRecipientData);
+    this.router.get(`${this.path}/:id(\\w+)`, this.recController.getRecipientData);
   }
 }
 

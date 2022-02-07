@@ -4,7 +4,7 @@ import { app } from '@/server';
 import { Prisma } from '@prisma/client';
 
 class OrganizationService {
-  public async getOrgData(orgId: number): Promise<any> {
+  public async getOrganizationData(orgId: number): Promise<any> {
     // First check if org exists (fetch orginfo such as name, industry)
     const orgInfo: Organization = await app.db.organization.findUnique({
       where: {
