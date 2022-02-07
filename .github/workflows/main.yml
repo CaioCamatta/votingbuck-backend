@@ -57,6 +57,9 @@ jobs:
           export DATABASE_URL="$DATABASE_URL"
           printenv DATABASE_URL
 
+      - name: Prisma Generate
+        run: npx prisma generate
+
       - name: Run tests
         run: npm test
 
