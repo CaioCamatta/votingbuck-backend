@@ -54,7 +54,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          export DATABASE_URL = "${{ secrets.DATABASE_URL }}"
+          export DATABASE_URL="$DATABASE_URL"
           printenv DATABASE_URL
 
       - name: Run tests
