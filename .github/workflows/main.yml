@@ -52,16 +52,13 @@ jobs:
 
       - name: Set up environment variables
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL:
         run: |
-          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          export DATABASE_URL="$DATABASE_URL"
           printenv DATABASE_URL
 
-      - name: Prisma Generate
-        run: npx prisma generate
-
       - name: Run tests
-        run: npm test
+        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" npm test
 
   Deploy:
     needs: Test
