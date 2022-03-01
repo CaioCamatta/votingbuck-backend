@@ -13,8 +13,10 @@ RUN npm run build
 # Production build stage
 FROM node:16.13.0-alpine3.14 as production-build-stage
 
-COPY --from=build-stage /app/node_modules ./node_modules
-COPY --from=build-stage /app/package*.json ./
+COPY package*.json ./
+RUN npm install --only=production
+COPY --from=build-stage /app/node_modules/.prisma/client /node_modules/.prisma/client
+
 COPY --from=build-stage /app/dist ./dist
 
 CMD ["node", "dist/server.js"]
