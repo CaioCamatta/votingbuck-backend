@@ -5,14 +5,15 @@ info:
   version: 1.0.0
 
 tags:
-  - name: Organizations
-  - name: Politicians
+  - name: Organization
+  - name: Recipient
+    description:  Aka Politician
 
 paths:
   /organizations/{id}:
     get:
       tags:
-        - Organizations
+        - Organization
       summary: Find User By Id
       produces:
         - 'application/json'
@@ -85,7 +86,7 @@ paths:
   /recipients/{id}:
     get:
       tags:
-        - Politicians
+        - Recipient
       summary: Find User By Id
       produces:
         - 'application/json'
