@@ -9,6 +9,7 @@ Express.js API. Features:
 - Jest for testing
 - SWC compiler for building
 - Swagger for pretty API (available under route /api-docs)
+- Prisma (ORM)
 
 Deployment:
 
@@ -18,6 +19,10 @@ Deployment:
 - CI/CD for automatic test, build, and deployment
 
 Based on this boilerplate: https://github.com/ljlm0402/typescript-express-starter
+
+### Running the App
+
+Use either `npm run dev` (dev) or `sudo docker-compose up -d --build` (prod containers).
 
 ### Database Changes:
 
