@@ -8,7 +8,7 @@ Express.js API. Features:
 - ESLint and Prettier for linting + Husky & Staged-lint for auto-linting on git commit
 - Jest for testing
 - SWC compiler for building
-- Swagger for pretty API (available under route /api-docs)
+- Swagger for pretty API (available under route /docs)
 - Prisma (ORM)
 
 Deployment:
