@@ -12,11 +12,13 @@ import swaggerUi from 'swagger-ui-express';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import { PrismaClient } from '@prisma/client';
 
 class App {
   public app: express.Application;
   public port: string | number;
   public env: string;
+  public db: PrismaClient;
 
   constructor(routes: Routes[]) {
     this.app = express();
@@ -32,7 +34,7 @@ class App {
   public listen() {
     this.app.listen(this.port, () => {
       logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
+      logger.info(`======= ENV: ${this.env} ========`);
       logger.info(`🚀 App listening on the port ${this.port}`);
       logger.info(`=================================`);
     });
@@ -44,7 +46,7 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(morgan(config.get('log.format'), { stream }));
-    this.app.use(cors({ origin: config.get('cors.origin'), credentials: config.get('cors.credentials') }));
+    // this.app.use(cors({ origin: config.get('cors.origin'), credentials: config.get('cors.credentials') }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
@@ -62,17 +64,17 @@ class App {
   private initializeSwagger() {
     const options = {
       swaggerDefinition: {
+        openapi: '3.0.0',
         info: {
           title: 'REST API',
           version: '1.0.0',
-          description: 'Documentation',
         },
       },
-      apis: ['swagger.yaml'],
+      apis: [`${__dirname}/../swagger.yaml`, `${__dirname}/swagger.yaml`],
     };
 
     const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private initializeErrorHandling() {

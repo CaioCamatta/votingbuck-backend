@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model donation {
+  id           Int           @id
+  org_id       Int?
+  rec_id       Int
+  date         DateTime      @db.Date
+  amount       Decimal       @db.Decimal
+  contributor  String
+  occupation   String?
+  city         String
+  state        String
+  organization organization? @relation(fields: [org_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipient    recipient     @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model organization {
+  id       Int        @id
+  name     String?
+  industry String?
+  donation donation[]
+}
+
+model recipient {
+  id       Int        @id
+  name     String?
+  ideology Decimal?   @db.Decimal
+  party    String?
+  donation donation[]
+}

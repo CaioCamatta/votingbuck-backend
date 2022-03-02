@@ -9,24 +9,7 @@ on:
       - master
 
 jobs:
-  Test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
   Build:
-    needs: Test
     runs-on: ubuntu-latest
 
     steps:
@@ -53,8 +36,32 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-  Deploy:
+  Test:
     needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up environment variables
+        env:
+          DATABASE_URL:
+        run: |
+          export DATABASE_URL="$DATABASE_URL"
+          printenv DATABASE_URL
+
+      - name: Run tests
+        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" npm test
+
+  Deploy:
+    needs: Test
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -69,6 +76,21 @@ jobs:
           port: 22
           source: 'docker-compose.yml,nginx.conf'
           target: './4470/'
+
+      - name: Create .env file in EC2
+        uses: appleboy/ssh-action@master
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+        with:
+          host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.AWS_EC2_PEM }}
+          envs: DATABASE_URL
+          script: |
+            ls -a
+            cd 4470
+            echo "DATABASE_URL = $DATABASE_URL" > .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
