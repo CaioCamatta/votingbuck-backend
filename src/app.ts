@@ -75,7 +75,7 @@ class App {
           version: '1.0.0',
         },
       },
-      apis: ['./src/routes/*.ts'],
+      apis: [`${__dirname}/../swagger.yaml`, `${__dirname}/swagger.yaml`],
     };
 
     const specs = swaggerJSDoc(options);
