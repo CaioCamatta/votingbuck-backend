@@ -7,7 +7,7 @@ info:
 tags:
   - name: Organization
   - name: Recipient
-    description:  Aka Politician
+    description: Aka Politician
 
 paths:
   /organizations/{id}:
@@ -32,19 +32,17 @@ paths:
                 type: object
                 properties:
                   orgInfo:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 42
-                        name:
-                          type: string
-                          example: Duke University
-                        industry:
-                          type: string
-                          example: school
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+                      name:
+                        type: string
+                        example: Duke University
+                      industry:
+                        type: string
+                        example: school
                   donationsByMonth:
                     type: array
                     items:
@@ -106,22 +104,20 @@ paths:
                 type: object
                 properties:
                   recInfo:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          example: 42
-                        name:
-                          type: string
-                          example: Donald trump
-                        ideology:
-                          type: float
-                          example: -0.15
-                        party:
-                          type: string
-                          example: 'Republican Party'
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+                      name:
+                        type: string
+                        example: Donald trump
+                      ideology:
+                        type: float
+                        example: -0.15
+                      party:
+                        type: string
+                        example: 'Republican Party'
                   donationsByMonth:
                     type: array
                     items:

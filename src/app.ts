@@ -25,7 +25,6 @@ class App {
     this.port = process.env.PORT || 3000;
     this.env = process.env.NODE_ENV || 'development';
 
-    this.initializeDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
     this.initializeSwagger();
@@ -43,10 +42,6 @@ class App {
 
   public getServer() {
     return this.app;
-  }
-
-  private initializeDatabase() {
-    this.db = new PrismaClient();
   }
 
   private initializeMiddlewares() {

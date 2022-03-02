@@ -1,12 +1,12 @@
 import { DonationsByMonth, DonationsByParty, Organization, TopDonators } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
-import { app } from '@/server';
 import { Prisma } from '@prisma/client';
+import prismaClient from '@databases/client';
 
 class OrganizationService {
   public async getOrganizationData(orgId: number): Promise<any> {
     // First check if org exists (fetch orginfo such as name, industry)
-    const orgInfo: Organization = await app.db.organization.findUnique({
+    const orgInfo: Organization = await prismaClient.organization.findUnique({
       where: {
         id: orgId,
       },
@@ -19,7 +19,7 @@ class OrganizationService {
     const [donationsByMonth, topDonators, donationsByParty]: [DonationsByMonth, TopDonators, DonationsByParty] = [
       // Note: Prisma's groupBy function is broken.
       // Donations across time (grouped by month)
-      await app.db.$queryRaw<DonationsByMonth>(
+      await prismaClient.$queryRaw<DonationsByMonth>(
         Prisma.sql`
           SELECT
             DATE_TRUNC('month',date) AS month_start_date,
@@ -30,7 +30,7 @@ class OrganizationService {
           ORDER BY month_start_date;`,
       ),
       // Top individual donators in an organization
-      await app.db.$queryRaw<TopDonators>(Prisma.sql`
+      await prismaClient.$queryRaw<TopDonators>(Prisma.sql`
         SELECT
           contributor,
           SUM(amount)::float as total_amount
@@ -40,7 +40,7 @@ class OrganizationService {
         ORDER BY SUM(amount) DESC
         LIMIT ${10};`),
       // DonationsByParty
-      await app.db.$queryRaw<DonationsByParty>(Prisma.sql`
+      await prismaClient.$queryRaw<DonationsByParty>(Prisma.sql`
           SELECT
             party,
             SUM(amount)::float as total_amount
