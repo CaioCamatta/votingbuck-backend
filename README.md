@@ -1,4 +1,4 @@
-# 4470 Backend
+# Voting Buck Backend
 
 Express.js API. Features:
 
