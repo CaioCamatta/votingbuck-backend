@@ -25,3 +25,11 @@ export interface TopRecipientsDollar {
   party: string;
   amount_received: number;
 }
+
+// Top recipients by number of donations received
+export interface TopRecipientsDonation {
+  id: number;
+  name: string;
+  party: string;
+  donations_received: number;
+}

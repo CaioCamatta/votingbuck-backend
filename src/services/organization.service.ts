@@ -1,4 +1,11 @@
-import { DonationsByMonth, DonationsByParty, Organization, TopDonators, TopRecipients } from '@interfaces/organization.interface';
+import {
+  DonationsByMonth,
+  DonationsByParty,
+  Organization,
+  TopDonators,
+  TopRecipientsDollar,
+  TopRecipientsDonation,
+} from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
@@ -20,7 +27,13 @@ class OrganizationService {
     const end_date = new Date(endDate);
 
     // Then, proceed with queries
-    const [donationsByMonth, topDonators, donationsByParty, topRecipients]: [DonationsByMonth, TopDonators, DonationsByParty, TopRecipientsDollar] = [
+    const [donationsByMonth, topDonators, donationsByParty, topRecipientsDollar, topRecipientsDonation]: [
+      DonationsByMonth,
+      TopDonators,
+      DonationsByParty,
+      TopRecipientsDollar,
+      TopRecipientsDonation,
+    ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations across time (grouped by month)
       await prismaClient.$queryRaw<DonationsByMonth>(
@@ -54,8 +67,7 @@ class OrganizationService {
           WHERE org_id = ${orgId}
           GROUP BY party
           ORDER BY SUM(amount) DESC;`),
-      // TopRecipients
-      //Aggregate all donations from specific organization to specified recipient and return top 5 recipients along with extra data from recipients table
+      // Top recipients of dollars
       await prismaClient.$queryRaw<TopRecipientsDollar>(Prisma.sql`
       SELECT
         d.rec_id as id,
@@ -69,9 +81,23 @@ class OrganizationService {
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY SUM(amount) DESC
       LIMIT 5;`),
+      // Top recipients by number of donations
+      await prismaClient.$queryRaw<TopRecipientsDonation>(Prisma.sql`
+      SELECT
+        d.rec_id as id,
+        COUNT(d.amount) as donations_received,
+        r.name as name,
+        r.party as party
+      FROM donation as d
+      JOIN recipient as r 
+        ON d.rec_id = r.id
+      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      GROUP BY d.rec_id, r.name, r.party
+      ORDER BY COUNT(amount) DESC
+      LIMIT 5;`),
     ];
 
-    return { orgInfo, donationsByMonth, topDonators, donationsByParty, topRecipients };
+    return { orgInfo, donationsByMonth, topDonators, donationsByParty, topRecipientsDollar, topRecipientsDonation };
   }
 }
 
