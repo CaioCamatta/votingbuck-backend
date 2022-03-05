@@ -8,10 +8,6 @@ export interface DonationsByMonth {
 }
 [];
 
-export interface TopDonators {
-  contributor: string;
-  total_amount: number;
-}
 [];
 export interface DonationsByParty {
   party: string;

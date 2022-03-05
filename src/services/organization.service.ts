@@ -1,11 +1,4 @@
-import {
-  DonationsByMonth,
-  DonationsByParty,
-  Organization,
-  TopDonators,
-  TopRecipientsDollar,
-  TopRecipientsDonation,
-} from '@interfaces/organization.interface';
+import { DonationsByMonth, DonationsByParty, Organization, TopRecipientsDollar, TopRecipientsDonation } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
@@ -27,9 +20,8 @@ class OrganizationService {
     const end_date = new Date(endDate);
 
     // Then, proceed with queries
-    const [donationsByMonth, topDonators, donationsByParty, topRecipientsDollar, topRecipientsDonation]: [
+    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation]: [
       DonationsByMonth,
-      TopDonators,
       DonationsByParty,
       TopRecipientsDollar,
       TopRecipientsDonation,
@@ -46,16 +38,6 @@ class OrganizationService {
           GROUP BY DATE_TRUNC('month',date)
           ORDER BY month_start_date;`,
       ),
-      // Top individual donators in an organization
-      await prismaClient.$queryRaw<TopDonators>(Prisma.sql`
-        SELECT
-          contributor,
-          SUM(amount)::float as total_amount
-        FROM donation
-        WHERE org_id = ${orgId}
-        GROUP BY contributor
-        ORDER BY SUM(amount) DESC
-        LIMIT ${10};`),
       // DonationsByParty
       await prismaClient.$queryRaw<DonationsByParty>(Prisma.sql`
           SELECT
@@ -97,7 +79,7 @@ class OrganizationService {
       LIMIT 5;`),
     ];
 
-    return { orgInfo, donationsByMonth, topDonators, donationsByParty, topRecipientsDollar, topRecipientsDonation };
+    return { orgInfo, donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation };
   }
 }
 
