@@ -1,4 +1,11 @@
-import { DonationsByMonth, DonationsByParty, Organization, TopRecipientsDollar, TopRecipientsDonation } from '@interfaces/organization.interface';
+import {
+  DonationsByMonth,
+  DonationsByParty,
+  Organization,
+  TopRecipientsDollar,
+  TopRecipientsDonation,
+  IdeologyDistribution,
+} from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
@@ -20,11 +27,12 @@ class OrganizationService {
     const end_date = new Date(endDate);
 
     // Then, proceed with queries
-    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation]: [
+    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution]: [
       DonationsByMonth,
       DonationsByParty,
       TopRecipientsDollar,
       TopRecipientsDonation,
+      IdeologyDistribution,
     ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations across time (grouped by month)
@@ -48,7 +56,8 @@ class OrganizationService {
             ON d.rec_id = r.id
           WHERE org_id = ${orgId}
           GROUP BY party
-          ORDER BY SUM(amount) DESC;`),
+          ORDER BY SUM(amount) DESC
+          LIMIT 3;`),
       // Top recipients of dollars
       await prismaClient.$queryRaw<TopRecipientsDollar>(Prisma.sql`
       SELECT
@@ -77,9 +86,19 @@ class OrganizationService {
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY COUNT(amount) DESC
       LIMIT 5;`),
+      // Ideology distribution for a company based on who they donate to
+      await prismaClient.$queryRaw<IdeologyDistribution>(Prisma.sql`
+      SELECT
+        ideology,
+        sum(d.amount) as dollars_donated
+      FROM donation as d
+      JOIN recipient as r 
+        ON d.rec_id = r.id
+      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      GROUP BY ideology;`),
     ];
 
-    return { orgInfo, donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation };
+    return { orgInfo, donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution };
   }
 }
 

@@ -29,3 +29,9 @@ export interface TopRecipientsDonation {
   party: string;
   donations_received: number;
 }
+
+// Distribution of ideology scores a company donates to
+export interface IdeologyDistribution {
+  ideology: number;
+  dollars_donated: number;
+}
