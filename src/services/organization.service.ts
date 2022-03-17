@@ -1,10 +1,10 @@
 import { DonationsByMonth, DonationsByParty, Organization, TopDonators } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
-import prismaClient from '@databases/client';
+import prismaClient from '@databases/postgresClient';
 
 class OrganizationService {
-  public async getOrganizationData(orgId: number): Promise<any> {
+  public async getOrganizationData(orgId: string): Promise<any> {
     // First check if org exists (fetch orginfo such as name, industry)
     const orgInfo: Organization = await prismaClient.organization.findUnique({
       where: {
