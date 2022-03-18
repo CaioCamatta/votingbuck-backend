@@ -7,7 +7,7 @@ class OrganizationController {
 
   public getOrganizationData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const orgId = parseInt(req.params.id);
+      const orgId = req.params.id;
       const queryObject = url.parse(req.url, true).query;
       const orgData = await this.organizationService.getOrganizationData(orgId, queryObject.start_date, queryObject.end_date);
 

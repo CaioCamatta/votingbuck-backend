@@ -35,3 +35,8 @@ export interface IdeologyDistribution {
   ideology: number;
   dollars_donated: number;
 }
+
+export interface TotalContributionsDollar {
+  dollars_donated: number;
+  date: string;
+}

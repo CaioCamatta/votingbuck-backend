@@ -5,13 +5,14 @@ import {
   TopRecipientsDollar,
   TopRecipientsDonation,
   IdeologyDistribution,
+  TotalContributionsDollar,
 } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
 
 class OrganizationService {
-  public async getOrganizationData(orgId: number, startDate: string, endDate: string): Promise<any> {
+  public async getOrganizationData(orgId: string, startDate: string, endDate: string): Promise<any> {
     // First check if org exists (fetch orginfo such as name, industry)
     const orgInfo: Organization = await prismaClient.organization.findUnique({
       where: {
@@ -27,12 +28,13 @@ class OrganizationService {
     const end_date = new Date(endDate);
 
     // Then, proceed with queries
-    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution]: [
+    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution, totalContributionsDollar]: [
       DonationsByMonth,
       DonationsByParty,
       TopRecipientsDollar,
       TopRecipientsDonation,
       IdeologyDistribution,
+      TotalContributionsDollar,
     ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations across time (grouped by month)
@@ -96,9 +98,24 @@ class OrganizationService {
         ON d.rec_id = r.id
       WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
       GROUP BY ideology;`),
+      // Total contributions by an organization in dollars
+      await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
+      SELECT
+        d.date as date,
+        d.amount as dollars_donated
+      FROM donation as d
+      WHERE d.org_id = ${orgId}`),
     ];
 
-    return { orgInfo, donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution };
+    return {
+      orgInfo,
+      donationsByMonth,
+      donationsByParty,
+      topRecipientsDollar,
+      topRecipientsDonation,
+      ideologyDistribution,
+      totalContributionsDollar,
+    };
   }
 }
 
