@@ -36,7 +36,15 @@ export interface IdeologyDistribution {
   dollars_donated: number;
 }
 
+// Total dollars donated by a corporation
 export interface TotalContributionsDollar {
   dollars_donated: number;
   date: string;
+}
+
+// Share of registered voters on board of directors
+export interface RegisteredVoters {
+  democratic: number;
+  republican: number;
+  independent: number;
 }

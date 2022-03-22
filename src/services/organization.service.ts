@@ -6,6 +6,7 @@ import {
   TopRecipientsDonation,
   IdeologyDistribution,
   TotalContributionsDollar,
+  RegisteredVoters,
 } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
@@ -28,13 +29,22 @@ class OrganizationService {
     const end_date = new Date(endDate);
 
     // Then, proceed with queries
-    const [donationsByMonth, donationsByParty, topRecipientsDollar, topRecipientsDonation, ideologyDistribution, totalContributionsDollar]: [
+    const [
+      donationsByMonth,
+      donationsByParty,
+      topRecipientsDollar,
+      topRecipientsDonation,
+      ideologyDistribution,
+      totalContributionsDollar,
+      registeredVoters,
+    ]: [
       DonationsByMonth,
       DonationsByParty,
       TopRecipientsDollar,
       TopRecipientsDonation,
       IdeologyDistribution,
       TotalContributionsDollar,
+      RegisteredVoters,
     ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations across time (grouped by month)
@@ -98,13 +108,21 @@ class OrganizationService {
         ON d.rec_id = r.id
       WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
       GROUP BY ideology;`),
-      // Total contributions by an organization in dollars
+      // Total contributions by an organization in dollars and Total contributions by an organization by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
       SELECT
         d.date as date,
         d.amount as dollars_donated
       FROM donation as d
       WHERE d.org_id = ${orgId}`),
+      // Share of registered voters
+      await prismaClient.$queryRaw<RegisteredVoters>(Prisma.sql`
+      SELECT
+        reg_dem as democratic,
+        reg_rep as republican,
+        reg_ind as independent
+      FROM organization
+      WHERE id = ${orgId}`),
     ];
 
     return {
@@ -115,6 +133,7 @@ class OrganizationService {
       topRecipientsDonation,
       ideologyDistribution,
       totalContributionsDollar,
+      registeredVoters,
     };
   }
 }
