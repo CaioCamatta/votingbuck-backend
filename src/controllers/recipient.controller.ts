@@ -6,7 +6,7 @@ class RecipientController {
 
   public getRecipientData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const recId = parseInt(req.params.id);
+      const recId = req.params.id;
       const recData = await this.recipientService.getRecipientData(recId);
 
       res.status(200).json(recData);
