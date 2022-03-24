@@ -12,7 +12,7 @@ describe('Testing Organizations', () => {
       const orgRoute = new OrganizationRoute();
       const app = new App([orgRoute]);
 
-      const response = await request(app.getServer()).get(`${orgRoute.path}/1`);
+      const response = await request(app.getServer()).get(`${orgRoute.path}/1?start_date=2017-11-03&end_date=2018-11-03`);
 
       expect(response.status).toEqual(200);
       expect(response.body.orgInfo.id).toEqual(1);

@@ -15,7 +15,7 @@ describe('Testing Recipients', () => {
       const response = await request(app.getServer()).get(`${recRoute.path}/1`);
 
       expect(response.status).toEqual(200);
-      expect(response.body.recInfo.id).toEqual(1);
+      expect(response.body.recInfo.id).toEqual('1');
     });
   });
 });
