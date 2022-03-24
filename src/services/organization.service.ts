@@ -66,7 +66,7 @@ class OrganizationService {
           FROM donation as d
           JOIN recipient as r
             ON d.rec_id = r.id
-          WHERE org_id = ${orgId}
+          WHERE org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
           GROUP BY party
           ORDER BY SUM(amount) DESC
           LIMIT 3;`),
