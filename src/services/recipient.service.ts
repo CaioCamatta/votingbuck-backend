@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
 
 class RecipientService {
-  public async getRecipientData(recId: number): Promise<any> {
+  public async getRecipientData(recId: string): Promise<any> {
     // First check if rec exists (fetch recinfo such as name, industry)
     const recInfo: Recipient = await prismaClient.recipient.findUnique({
       where: {

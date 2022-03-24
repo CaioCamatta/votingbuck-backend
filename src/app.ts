@@ -1,7 +1,7 @@
 import '@/index';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import config from 'config';
 import express from 'express';
 import helmet from 'helmet';
@@ -46,7 +46,10 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(morgan(config.get('log.format'), { stream }));
-    // this.app.use(cors({ origin: config.get('cors.origin'), credentials: config.get('cors.credentials') }));
+
+    //const corsOptions = { origin: config.get('cors.origin'), credentials: config.get('cors.credentials') };
+    const corsOptions: CorsOptions = { origin: '*' };
+    this.app.use(cors(corsOptions));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
