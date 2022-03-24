@@ -118,11 +118,10 @@ class OrganizationService {
       // Share of registered voters
       await prismaClient.$queryRaw<RegisteredVoters>(Prisma.sql`
       SELECT
-        reg_dem as democratic,
-        reg_rep as republican,
-        reg_ind as independent
-      FROM organization
-      WHERE id = ${orgId}`),
+        dem_count as democratic,
+        rep_count as republican
+      FROM registered_voters
+      WHERE org_id = ${orgId} AND year = ${end_date.getFullYear()}`),
     ];
 
     return {

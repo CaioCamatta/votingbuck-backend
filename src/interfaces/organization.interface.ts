@@ -46,5 +46,4 @@ export interface TotalContributionsDollar {
 export interface RegisteredVoters {
   democratic: number;
   republican: number;
-  independent: number;
 }

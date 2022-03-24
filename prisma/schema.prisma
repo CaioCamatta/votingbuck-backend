@@ -21,20 +21,24 @@ model donation {
 }
 
 model organization {
-  id             String      @id
-  name           String?
-  description    String?
-  industry       String?
-  location       String?
-  uni_acronym    String?
-  uni_rank       Decimal?    @db.Decimal
-  uni_enrollment Decimal?    @db.Decimal
-  uni_founded    Decimal?    @db.Decimal
-  uni_public     Boolean?
-  corp_revolvers Decimal?    @db.Decimal
-  corp_lobby     Decimal?    @db.Decimal
-  donation       donation[]
-  recipient      recipient[]
+  id                String              @id
+  name              String?
+  description       String?
+  industry          String?
+  location          String?
+  uni_acronym       String?
+  uni_rank          Decimal?            @db.Decimal
+  uni_enrollment    Decimal?            @db.Decimal
+  uni_founded       Decimal?            @db.Decimal
+  uni_public        Boolean?
+  corp_revolvers    Decimal?            @db.Decimal
+  corp_lobby        Decimal?            @db.Decimal
+  reg_dem           Decimal?            @db.Decimal
+  reg_rep           Decimal?            @db.Decimal
+  reg_ind           Decimal?            @db.Decimal
+  donation          donation[]
+  recipient         recipient[]
+  registered_voters registered_voters[]
 }
 
 model recipient {
@@ -45,7 +49,7 @@ model recipient {
   party          String?
   dob            DateTime?     @db.Date
   school         String?
-  office         String
+  office         String?
   role           String?
   state          String?
   wealth         Decimal?      @db.Decimal
@@ -53,4 +57,51 @@ model recipient {
   wealth_incrase Decimal?      @db.Decimal
   organization   organization? @relation(fields: [school], references: [id], onDelete: NoAction, onUpdate: NoAction)
   donation       donation[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model committee {
+  id   String?
+  name String?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model committee_membership {
+  rec_id  String?
+  comm_id String?
+  rank    String?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model leadership_role {
+  rec_id     String?
+  title      String?
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model office {
+  rec_id     String?
+  title      String?
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+
+  @@ignore
+}
+
+model registered_voters {
+  org_id       String
+  year         Decimal      @db.Decimal
+  dem_count    Decimal?     @db.Decimal
+  rep_count    Decimal?     @db.Decimal
+  organization organization @relation(fields: [org_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([org_id, year])
 }
