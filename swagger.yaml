@@ -10,11 +10,11 @@ tags:
     description: Aka Politician
 
 paths:
-  /organizations/{id}:
+  /organizations/{id}?start_date={start_date}&end_date={end_date}:
     get:
       tags:
         - Organization
-      summary: Find User By Id
+      summary: Find Organization data by Id and start_date/end_date of specified period
       produces:
         - 'application/json'
       parameters:
@@ -54,17 +54,6 @@ paths:
                         amount_donated:
                           type: float
                           example: 12345.67
-                  topDonators:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        contributor:
-                          type: string
-                          example: John Smith
-                        total_amount:
-                          type: float
-                          example: 12345.67
                   donationsByParty:
                     type: array
                     items:
@@ -76,10 +65,208 @@ paths:
                         total_amount:
                           type: float
                           example: 12345.67
+                  topRecipientsDollar:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 1
+                        name:
+                          type: string
+                          example: Josh
+                        party:
+                          type: string
+                          example: Independent
+                        amount_received:
+                          type: number
+                          example: 1234.56
+                  topRecipientsDonation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 1
+                        name:
+                          type: string
+                          example: Josh
+                        party:
+                          type: string
+                          example: Independent
+                        donations_received:
+                          type: number
+                          example: 200
+                  ideologyDistribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ideology:
+                          type: number
+                          example: -0.73
+                        dollars_donated:
+                          type: number
+                          example: 12345.67
+                  totalContributionsDollar:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        dollars_donated:
+                          type: number
+                          example: 1234.56
+                        date:
+                          type: string
+                          example: 2017-011-03
+                  registeredVoters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        democratic:
+                          type: number
+                          example: 50
+                        republican:
+                          type: number
+                          example: 75
+        400:
+          description: 'Bad Request (start/end_date missing)'
         404:
           description: 'Not Found'
         500:
           description: 'Server Error'
+
+  /universities/{id}?start_date={start_date}&end_date={end_date}:
+      get:
+        tags:
+          - University
+        summary: Find University data by Id and start_date/end_date of specified period
+        produces:
+          - 'application/json'
+        parameters:
+          - name: id
+            in: path
+            description: University Id
+            required: true
+            type: integer
+        responses:
+          200:
+            description: 'OK'
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    uniInfo:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 42
+                        name:
+                          type: string
+                          example: Duke University
+                        industry:
+                          type: string
+                          example: school
+                    donationsByMonth:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          month_start_date:
+                            type: string
+                            example: 2012-12-01T00:00:00.000Z
+                          amount_donated:
+                            type: float
+                            example: 12345.67
+                    donationsByParty:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          party:
+                            type: string
+                            example: Independent
+                          total_amount:
+                            type: float
+                            example: 12345.67
+                    topRecipientsDollar:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                            example: 1
+                          name:
+                            type: string
+                            example: Josh
+                          party:
+                            type: string
+                            example: Independent
+                          amount_received:
+                            type: number
+                            example: 1234.56
+                    topRecipientsDonation:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: number
+                            example: 1
+                          name:
+                            type: string
+                            example: Josh
+                          party:
+                            type: string
+                            example: Independent
+                          donations_received:
+                            type: number
+                            example: 200
+                    ideologyDistribution:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          ideology:
+                            type: number
+                            example: -0.73
+                          dollars_donated:
+                            type: number
+                            example: 12345.67
+                    totalContributionsDollar:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          dollars_donated:
+                            type: number
+                            example: 1234.56
+                          date:
+                            type: string
+                            example: 2017-011-03
+                    registeredVoters:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          democratic:
+                            type: number
+                            example: 50
+                          republican:
+                            type: number
+                            example: 75
+          400:
+            description: 'Bad Request (start/end_date missing)'
+          404:
+            description: 'Not Found'
+          500:
+            description: 'Server Error'
 
   /recipients/{id}:
     get:
