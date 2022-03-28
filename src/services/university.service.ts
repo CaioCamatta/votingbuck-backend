@@ -15,7 +15,6 @@ import prismaClient from '@databases/client';
 class UniversityService {
   public async getUniversityData(uniId: string, startDate: string, endDate: string): Promise<any> {
     // First check if uni exists (fetch uniinfo such as name, industry)
-    console.log('here');
     const uniInfo: University = await prismaClient.organization.findUnique({
       where: {
         id: uniId,
@@ -26,8 +25,8 @@ class UniversityService {
     }
 
     // Setup date objects to be used for query (start/end date for the requested period)
-    const start_date = new Date(startDate);
-    const end_date = new Date(endDate);
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
     // Then, proceed with queries
     const [
@@ -67,7 +66,7 @@ class UniversityService {
           FROM donation as d
           JOIN recipient as r
             ON d.rec_id = r.id
-          WHERE org_id = ${uniId} AND d.date BETWEEN ${start_date} AND ${end_date}
+          WHERE org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
           GROUP BY party
           ORDER BY SUM(amount) DESC
           LIMIT 3;`),
@@ -81,7 +80,7 @@ class UniversityService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY SUM(amount) DESC
       LIMIT 5;`),
@@ -95,7 +94,7 @@ class UniversityService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY COUNT(amount) DESC
       LIMIT 5;`),
@@ -107,7 +106,7 @@ class UniversityService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY ideology;`),
       // Total contributions by a university in dollars and Total contributions by an university by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
@@ -122,7 +121,7 @@ class UniversityService {
         dem_count as democratic,
         rep_count as republican
       FROM registered_voters
-      WHERE org_id = ${uniId} AND year = ${end_date.getFullYear()}`),
+      WHERE org_id = ${uniId} AND year = ${endDateObj.getFullYear()}`),
     ];
 
     return {

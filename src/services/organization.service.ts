@@ -25,8 +25,8 @@ class OrganizationService {
     }
 
     // Setup date objects to be used for query (start/end date for the requested period)
-    const start_date = new Date(startDate);
-    const end_date = new Date(endDate);
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
     // Then, proceed with queries
     const [
@@ -66,7 +66,7 @@ class OrganizationService {
           FROM donation as d
           JOIN recipient as r
             ON d.rec_id = r.id
-          WHERE org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+          WHERE org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
           GROUP BY party
           ORDER BY SUM(amount) DESC
           LIMIT 3;`),
@@ -80,7 +80,7 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY SUM(amount) DESC
       LIMIT 5;`),
@@ -94,7 +94,7 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY COUNT(amount) DESC
       LIMIT 5;`),
@@ -106,7 +106,7 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${start_date} AND ${end_date}
+      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY ideology;`),
       // Total contributions by an organization in dollars and Total contributions by an organization by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
@@ -120,8 +120,8 @@ class OrganizationService {
       SELECT
         dem_count as democratic,
         rep_count as republican
-      FROM registered_voters
-      WHERE org_id = ${orgId} AND year = ${end_date.getFullYear()}`),
+      FROM registered_votersF
+      WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()}`),
     ];
 
     return {
