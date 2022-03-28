@@ -10,7 +10,7 @@ tags:
     description: Aka Politician
 
 paths:
-  /organizations/{id}?start_date={start_date}&end_date={end_date}:
+  /organizations/{id}:
     get:
       tags:
         - Organization
@@ -23,6 +23,16 @@ paths:
           description: Organization Id
           required: true
           type: integer
+        - name: start_date
+          in: query
+          description: Start date for a political period in the form YYYY-MM-DD. E.g. 2016-11-03
+          required: true
+          type: date
+        - name: end_date
+          in: query
+          description: End date for a political period in the form YYYY-MM-DD. E.g. 2018-11-03
+          required: true
+          type: date
       responses:
         200:
           description: 'OK'
@@ -139,7 +149,7 @@ paths:
         500:
           description: 'Server Error'
 
-  /universities/{id}?start_date={start_date}&end_date={end_date}:
+  /universities/{id}:
       get:
         tags:
           - University
@@ -152,6 +162,16 @@ paths:
             description: University Id
             required: true
             type: integer
+          - name: start_date
+            in: query
+            description: Start date for a political period in the form YYYY-MM-DD. E.g. 2016-11-03
+            required: true
+            type: date
+          - name: end_date
+            in: query
+            description: End date for a political period in the form YYYY-MM-DD. E.g. 2018-11-03
+            required: true
+            type: date
         responses:
           200:
             description: 'OK'
