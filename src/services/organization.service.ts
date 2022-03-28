@@ -120,7 +120,7 @@ class OrganizationService {
       SELECT
         dem_count as democratic,
         rep_count as republican
-      FROM registered_votersF
+      FROM registered_voters
       WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()}`),
     ];
 
