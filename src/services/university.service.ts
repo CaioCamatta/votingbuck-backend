@@ -1,27 +1,27 @@
 import {
   DonationsByMonth,
   DonationsByParty,
-  Organization,
+  University,
   TopRecipientsDollar,
   TopRecipientsDonation,
   IdeologyDistribution,
   TotalContributionsDollar,
   RegisteredVoters,
-} from '@interfaces/organization.interface';
+} from '@interfaces/university.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/client';
 
-class OrganizationService {
-  public async getOrganizationData(orgId: string, startDate: string, endDate: string): Promise<any> {
-    // First check if org exists (fetch orginfo such as name, industry)
-    const orgInfo: Organization = await prismaClient.organization.findUnique({
+class UniversityService {
+  public async getUniversityData(uniId: string, startDate: string, endDate: string): Promise<any> {
+    // First check if uni exists (fetch uniinfo such as name, industry)
+    const uniInfo: University = await prismaClient.organization.findUnique({
       where: {
-        id: orgId,
+        id: uniId,
       },
     });
-    if (orgInfo === null || orgInfo.industry === 'school') {
-      throw new HttpException(404, 'Organization not found.');
+    if (uniInfo === null || uniInfo.industry !== 'school') {
+      throw new HttpException(404, 'University not found.');
     }
 
     // Setup date objects to be used for query (start/end date for the requested period)
@@ -54,7 +54,7 @@ class OrganizationService {
             DATE_TRUNC('month',date) AS month_start_date,
             SUM(amount)::float AS amount_donated
           FROM donation
-          WHERE org_id = ${orgId}
+          WHERE org_id = ${uniId}
           GROUP BY DATE_TRUNC('month',date)
           ORDER BY month_start_date;`,
       ),
@@ -66,7 +66,7 @@ class OrganizationService {
           FROM donation as d
           JOIN recipient as r
             ON d.rec_id = r.id
-          WHERE org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
+          WHERE org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
           GROUP BY party
           ORDER BY SUM(amount) DESC
           LIMIT 3;`),
@@ -80,7 +80,7 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY SUM(amount) DESC
       LIMIT 5;`),
@@ -94,7 +94,7 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY d.rec_id, r.name, r.party
       ORDER BY COUNT(amount) DESC
       LIMIT 5;`),
@@ -106,26 +106,26 @@ class OrganizationService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
       GROUP BY ideology;`),
-      // Total contributions by an organization in dollars and Total contributions by an organization by # of donations
+      // Total contributions by a university in dollars and Total contributions by an university by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
       SELECT
         d.date as date,
         d.amount as dollars_donated
       FROM donation as d
-      WHERE d.org_id = ${orgId}`),
+      WHERE d.org_id = ${uniId}`),
       // Share of registered voters
       await prismaClient.$queryRaw<RegisteredVoters>(Prisma.sql`
       SELECT
         dem_count as democratic,
         rep_count as republican
       FROM registered_voters
-      WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()}`),
+      WHERE org_id = ${uniId} AND year = ${endDateObj.getFullYear()}`),
     ];
 
     return {
-      orgInfo,
+      uniInfo,
       donationsByMonth,
       donationsByParty,
       topRecipientsDollar,
@@ -137,4 +137,4 @@ class OrganizationService {
   }
 }
 
-export default OrganizationService;
+export default UniversityService;
