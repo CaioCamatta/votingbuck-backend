@@ -86,4 +86,4 @@ The formula to calculate the scores for each entity type is:
 - Corpotates: `1 - (1/(1 + x/<AVERAGE number of revolvers, e.g. 100>)) × 0.9`
 - Politicians: `1 - (1/(1 + x/<AVERAGE wealth, e.g. 100>)) × 0.9`
 
-Scores must be between 0.o and 1.0. The above functions map everything to in the [0.1, 1.0] space.
+Scores must be between 0.o and 1.0. The above functions map everything to in the [0, 1.0) range.

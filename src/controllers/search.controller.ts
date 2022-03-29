@@ -6,11 +6,11 @@ class SearchController {
   public searchService = new SearchService();
 
   constructor() {
-    this.populateRedisSearch();
+    this._populateRedisSearch();
   }
 
   /** Populate RedisSearch if necessary */
-  private populateRedisSearch = async (): Promise<void> => {
+  private _populateRedisSearch = async (): Promise<void> => {
     await this.searchService.populateRedisSearch();
   };
 

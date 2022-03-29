@@ -3,9 +3,13 @@ import { SearchResult } from '@interfaces/search.interface';
 import prismaClient from '@databases/postgresClient';
 import { logger } from '@/utils/logger';
 
+// For each category of entity, return this number of results
+const RESULTS_PER_CATEGORY = 5;
+
 class SearchService {
   public async search(query: string, type: 'politician' | 'corporate' | 'university'): Promise<any> {
     // Query with Levenshtein distance of two OR as prefix
+    // If the query is empty, just return top results of each category
     const redisQuery =
       (query
         ? `(${query
@@ -16,25 +20,35 @@ class SearchService {
 
     const results: SearchResult = (await redisClient.ft.search(process.env.REDIS_INDEX_NAME, redisQuery, {
       SCORER: 'DOCSCORE',
-      LIMIT: { from: 0, size: 2 },
+      LIMIT: { from: 0, size: RESULTS_PER_CATEGORY },
     })) as SearchResult;
 
     return results;
   }
 
+  /**
+   * Populate Redis with data if it is empty.
+   *
+   * This should run only once every time Redis is flushed or initialized.
+   * For example, if new data is available in the main Postgres DB, we would
+   * want to flush Redis so the data is updated.
+   *
+   * There is lots of room for improvement in terms of populating Redis.
+   */
   public populateRedisSearch = async (): Promise<void> => {
     try {
-      // Try to get index info (fails if not existent)
+      // Try to get index info (fails if index doesn't exist existent)
       const ftInfo = await redisClient.ft.info(process.env.REDIS_INDEX_NAME);
 
       // If index exists but isn't empty, exit
-      if (ftInfo.numDocs != '3') {
+      if (ftInfo.numDocs != '0') {
         return;
       }
     } catch (error) {
-      // If index doesn't exist, populate it
+      // If index doesn't exist or is empty, we populate it
     }
 
+    // Get necessary data
     const corporates = await prismaClient.organization.findMany({
       where: {
         industry: 'corp',
@@ -68,7 +82,8 @@ class SearchService {
       return;
     }
 
-    // Calculate averages for each score criteria so we can calculate individual scores (see readme)
+    // Calculate averages for each score criteria so we can calculate individual scores
+    // relative to the average (see README for more info)
     const avgUniRanking = (
       await prismaClient.organization.aggregate({
         where: {
@@ -99,7 +114,7 @@ class SearchService {
 
     // Add everything to Redis
     universities.forEach(async (uni) => {
-      const score = 1 - (1 / (1 + parseInt(uni.uni_rank as any) / (avgUniRanking as any))) * 0.9;
+      const score = this._score(parseInt(uni.uni_rank as any), avgUniRanking as any);
       await redisClient
         .multi()
         .hSet(`entity:uni:${uni.id}`, 'name', uni.name)
@@ -109,7 +124,7 @@ class SearchService {
         .exec();
     });
     politicians.forEach(async (pol) => {
-      const score = 1 - (1 / (1 + parseInt(pol.wealth as any) / (avgPoliticianWealth as any))) * 0.9;
+      const score = this._score(parseInt(pol.wealth as any), avgPoliticianWealth as any);
       await redisClient
         .multi()
         .hSet(`entity:pol:${pol.id}`, 'name', pol.name)
@@ -119,7 +134,7 @@ class SearchService {
         .exec();
     });
     corporates.forEach(async (cor) => {
-      const score = 1 - (1 / (1 + parseInt(cor.corp_revolvers as any) / (avgCorpRevolvers as any))) * 0.9;
+      const score = this._score(parseInt(cor.corp_revolvers as any), avgCorpRevolvers as any);
       await redisClient
         .multi()
         .hSet(`entity:cor:${cor.id}`, 'name', cor.name)
@@ -129,6 +144,14 @@ class SearchService {
         .exec();
     });
     logger.info('Populated Redis.');
+  };
+
+  /**
+   * Map a positive number into the range [0, 1) using a sigmoid-like function.
+   * This is necessary because scores in Redis must be in the [0,1] range
+   */
+  private _score = (x: number, avg: number) => {
+    return 1 - 1 / (1 + x / avg);
   };
 }
 
