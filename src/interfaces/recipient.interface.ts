@@ -13,3 +13,23 @@ export interface TopDonators {
   total_amount: number;
 }
 [];
+
+export interface IdeologyDistribution {
+  ideology: number;
+  count: number;
+}
+
+export interface TopDonationsDollarsByIndustry {
+  industry: string;
+  dollars_donated: number;
+}
+
+export interface TopDonationsDollarsByCorporation {
+  corporation: string;
+  dollars_donated: number;
+}
+
+export interface TopDonationsDollarsByUniversity {
+  university: string;
+  dollars_donated: number;
+}

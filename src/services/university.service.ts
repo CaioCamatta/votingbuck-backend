@@ -20,7 +20,7 @@ class UniversityService {
         id: uniId,
       },
     });
-    if (uniInfo === null || uniInfo.industry !== 'school') {
+    if (uniInfo === null || uniInfo.industry.toLowerCase() !== 'school') {
       throw new HttpException(404, 'University not found.');
     }
 

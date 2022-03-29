@@ -20,7 +20,7 @@ class OrganizationService {
         id: orgId,
       },
     });
-    if (orgInfo === null || orgInfo.industry === 'school') {
+    if (orgInfo === null || orgInfo.industry.toLowerCase() === 'school') {
       throw new HttpException(404, 'Organization not found.');
     }
 
