@@ -44,7 +44,7 @@ jobs:
 
       - name: Build docker images
         run: |
-          docker-compose down
+          docker network create 4470-backend_backend
           docker-compose create redis 
           docker-compose start redis 
 
