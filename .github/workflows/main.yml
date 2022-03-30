@@ -49,7 +49,7 @@ jobs:
           docker-compose start redis
 
       - name: Create Redis index
-        run: sudo docker exec -it 6540a6e4d3ea redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
+        run: docker exec -it redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
 
       - name: Set up Node.js
         uses: actions/setup-node@v1
@@ -131,3 +131,6 @@ jobs:
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
+      
+      - name: Create Redis index
+        run: docker exec -it redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
