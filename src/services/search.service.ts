@@ -4,7 +4,7 @@ import prismaClient from '@databases/postgresClient';
 import { logger } from '@/utils/logger';
 
 // For each category of entity, return this number of results
-const RESULTS_PER_CATEGORY = 5;
+export const RESULTS_PER_CATEGORY = 5;
 
 class SearchService {
   public async search(query: string, type: 'politician' | 'corporate' | 'university'): Promise<any> {
