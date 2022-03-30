@@ -106,7 +106,7 @@ class UniversityService {
       FROM donation as d
       JOIN recipient as r 
         ON d.rec_id = r.id
-      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj}
+      WHERE d.org_id = ${uniId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj} AND r.ideology IS NOT NULL
       GROUP BY ideology;`),
       // Total contributions by a university in dollars and Total contributions by an university by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
