@@ -11,7 +11,7 @@ class SearchController {
 
   /** Populate RedisSearch if necessary */
   private _populateRedisSearch = async (): Promise<void> => {
-    await this.searchService.populateRedisSearch();
+    await SearchService.populateRedisSearch();
   };
 
   public getSearchData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

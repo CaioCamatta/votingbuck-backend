@@ -1,12 +1,16 @@
 import request from 'supertest';
 import App from '@/app';
 import SearchRoute from '@routes/search.route';
-import { RESULTS_PER_CATEGORY } from '@services/search.service';
+import SearchService, { RESULTS_PER_CATEGORY } from '@services/search.service';
 import client from '@databases/redisClient';
 
 afterAll(async () => {
   await client.quit();
   await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
+});
+
+beforeAll(async () => {
+  await SearchService.populateRedisSearch();
 });
 
 describe('Test Search', () => {

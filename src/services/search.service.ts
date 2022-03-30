@@ -35,7 +35,7 @@ class SearchService {
    *
    * There is lots of room for improvement in terms of populating Redis.
    */
-  public populateRedisSearch = async (): Promise<void> => {
+  public static populateRedisSearch = async (): Promise<void> => {
     try {
       // Try to get index info (fails if index doesn't exist existent)
       const ftInfo = await redisClient.ft.info(process.env.REDIS_INDEX_NAME);
@@ -152,7 +152,7 @@ class SearchService {
    * Map a positive number into the range [0, 1) using a sigmoid-like function.
    * This is necessary because scores in Redis must be in the [0,1] range
    */
-  private _score = (x: number, avg: number) => {
+  private static _score = (x: number, avg: number) => {
     return 1 - 1 / (1 + x / avg);
   };
 }
