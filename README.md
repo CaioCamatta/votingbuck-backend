@@ -29,6 +29,7 @@ First, make sure you have a local instance of Redis (and RedisSearch) running. Y
     sudo docker network create 4470-backend_backend
     sudo docker-compose create redis
     sudo docker-compose start redis
+    sudo docker exec redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
 
 Then, define all your environment variables. E.g., create a `.env` file containing:
 
