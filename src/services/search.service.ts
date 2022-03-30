@@ -42,7 +42,7 @@ class SearchService {
 
       // If index exists but isn't empty, exit
       if (ftInfo.numDocs != '0') {
-        return;
+        // return;
       }
     } catch (error) {
       // If index doesn't exist or is empty, we populate it
@@ -51,7 +51,9 @@ class SearchService {
     // Get necessary data
     const corporates = await prismaClient.organization.findMany({
       where: {
-        industry: 'corp',
+        NOT: {
+          industry: 'School',
+        },
       },
       select: {
         name: true,
@@ -61,7 +63,7 @@ class SearchService {
     });
     const universities = await prismaClient.organization.findMany({
       where: {
-        industry: 'school',
+        industry: 'School',
       },
       select: {
         name: true,

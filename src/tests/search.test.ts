@@ -1,7 +1,7 @@
 import request from 'supertest';
 import App from '@/app';
 import SearchRoute from '@routes/search.route';
-import RESULTS_PER_CATEGORY from '@services/search.service';
+import { RESULTS_PER_CATEGORY } from '@services/search.service';
 
 afterAll(async () => {
   await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
