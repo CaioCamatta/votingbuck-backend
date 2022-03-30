@@ -42,7 +42,7 @@ class SearchService {
 
       // If index exists but isn't empty, exit
       if (ftInfo.numDocs != '0') {
-        // return;
+        return;
       }
     } catch (error) {
       // If index doesn't exist or is empty, we populate it
