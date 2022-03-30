@@ -8,7 +8,7 @@ export const RESULTS_PER_CATEGORY = 5;
 
 class SearchService {
   public async search(query: string, type: 'politician' | 'corporate' | 'university'): Promise<any> {
-    // Query with Levenshtein distance of two OR as prefix
+    // Query with Levenshtein distance of one OR as prefix
     // If the query is empty, just return top results of each category
     const redisQuery =
       (query
