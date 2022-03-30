@@ -1,6 +1,6 @@
 import { organization } from '@prisma/client';
 
-export type Organization = organization;
+export type University = organization;
 
 export interface DonationsByMonth {
   month_start_date: string;

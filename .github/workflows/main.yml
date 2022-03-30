@@ -30,7 +30,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: 4470-backend_server
+          ECR_REPOSITORY: votingbuck-backend_server
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -75,7 +75,7 @@ jobs:
           key: ${{ secrets.AWS_EC2_PEM }}
           port: 22
           source: 'docker-compose.yml,nginx.conf'
-          target: './4470/'
+          target: './api/'
 
       - name: Create .env file in EC2
         uses: appleboy/ssh-action@master
@@ -89,7 +89,7 @@ jobs:
           envs: DATABASE_URL
           script: |
             ls -a
-            cd 4470
+            cd api
             echo "DATABASE_URL = $DATABASE_URL" > .env
 
       - name: Configure AWS credentials
@@ -107,7 +107,7 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: 4470-backend_server
+          ECR_REPOSITORY: votingbuck-backend_server
           IMAGE_TAG: latest
         with:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
@@ -116,10 +116,10 @@ jobs:
           envs: ECR_REGISTRY,ECR_REPOSITORY,IMAGE_TAG
           script: |
             ls -a
-            cd 4470
+            cd api
             aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin $ECR_REGISTRY
             docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 4470-backend_server
+            docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG votingbuck-backend_server
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d

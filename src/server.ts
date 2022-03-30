@@ -5,10 +5,11 @@ import validateEnv from '@utils/validateEnv';
 import OrganizationRoute from './routes/organization.route';
 import RecipientRoute from './routes/recipient.route';
 import SearchRoute from './routes/search.route';
+import UniversityRoute from './routes/university.route';
 
 validateEnv();
 
-const app = new App([new OrganizationRoute(), new RecipientRoute(), new SearchRoute()]);
+const app = new App([new OrganizationRoute(), new RecipientRoute(), new SearchRoute(), new UniversityRoute()]);
 
 app.listen();
 
