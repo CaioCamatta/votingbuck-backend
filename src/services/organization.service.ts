@@ -10,7 +10,7 @@ import {
 } from '@interfaces/organization.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
-import prismaClient from '@databases/client';
+import prismaClient from '@databases/postgresClient';
 
 class OrganizationService {
   public async getOrganizationData(orgId: string, startDate: string, endDate: string): Promise<any> {

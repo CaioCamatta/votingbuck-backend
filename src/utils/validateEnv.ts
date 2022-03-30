@@ -5,6 +5,9 @@ const validateEnv = () => {
     NODE_ENV: str(),
     PORT: port(),
     DATABASE_URL: str(),
+    REDIS_HOST: str(),
+    REDIS_PORT: port(),
+    REDIS_INDEX_NAME: str(),
   });
 };
 

@@ -1,7 +1,7 @@
 import { DonationsByMonth, Recipient, TopDonators } from '@interfaces/recipient.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
-import prismaClient from '@databases/client';
+import prismaClient from '@databases/postgresClient';
 
 class RecipientService {
   public async getRecipientData(recId: string): Promise<any> {

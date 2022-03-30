@@ -11,6 +11,8 @@ services:
     restart: 'unless-stopped'
     networks:
       - backend
+    depends_on:
+      - redis
   server:
     build:
       context: ./
@@ -30,6 +32,18 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+    depends_on:
+      - redis
+  redis:
+    image: redislabs/redisearch
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - /local-data/:/data
+    restart: 'unless-stopped'
+    networks:
+      - backend
 
 networks:
   backend:

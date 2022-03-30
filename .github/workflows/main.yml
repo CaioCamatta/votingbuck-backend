@@ -42,6 +42,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Redis
+        run: |
+          docker network create 4470-backend_backend
+          docker-compose create redis 
+          docker-compose start redis
+
+      - name: Create Redis index
+        run: docker exec redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
+
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
@@ -50,15 +59,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set up environment variables
-        env:
-          DATABASE_URL:
-        run: |
-          export DATABASE_URL="$DATABASE_URL"
-          printenv DATABASE_URL
-
       - name: Run tests
-        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" npm test
+        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" REDIS_HOST="127.0.0.1" REDIS_PORT="${{ secrets.REDIS_PORT }}" REDIS_INDEX_NAME="${{ secrets.REDIS_INDEX_NAME }}" npm test
 
   Deploy:
     needs: Test
@@ -81,16 +83,22 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_INDEX_NAME: ${{ secrets.REDIS_INDEX_NAME }}
 
         with:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_PEM }}
-          envs: DATABASE_URL
+          envs: DATABASE_URL,REDIS_HOST,REDIS_PORT,REDIS_INDEX_NAME
           script: |
             ls -a
             cd api
-            echo "DATABASE_URL = $DATABASE_URL" > .env
+            echo "DATABASE_URL=$DATABASE_URL" > .env
+            echo "REDIS_HOST=$REDIS_HOST" >> .env
+            echo "REDIS_PORT=$REDIS_PORT" >> .env
+            echo "REDIS_INDEX_NAME=$REDIS_INDEX_NAME" >> .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
