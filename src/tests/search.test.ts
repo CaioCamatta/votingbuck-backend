@@ -10,7 +10,8 @@ afterAll(async () => {
 });
 
 beforeAll(async () => {
-  await SearchService.populateRedisSearch();
+  const searchService = new SearchService();
+  await searchService.populateRedisSearch();
 });
 
 describe('Test Search', () => {
