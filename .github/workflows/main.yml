@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build docker images
+      - name: Set up Redis
         run: |
           docker network create 4470-backend_backend
           docker-compose create redis 
