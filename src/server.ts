@@ -7,6 +7,7 @@ import RecipientRoute from './routes/recipient.route';
 import SearchRoute from './routes/search.route';
 import UniversityRoute from './routes/university.route';
 
+require('events').EventEmitter.prototype._maxListeners = 12;
 validateEnv();
 
 const app = new App([new OrganizationRoute(), new RecipientRoute(), new SearchRoute(), new UniversityRoute()]);
