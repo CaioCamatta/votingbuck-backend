@@ -145,7 +145,7 @@ class SearchService {
         .hSet(`entity:cor:${cor.id}`, 'score', score)
         .exec();
     });
-    logger.info('Populated Redis.');
+    logger.info(`Populated Redis with ${universities.length} universities, ${corporates.length} corporates, and ${politicians.length} politicians.`);
   };
 
   /**
