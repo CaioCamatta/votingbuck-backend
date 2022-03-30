@@ -44,7 +44,7 @@ jobs:
 
       - name: Build docker images
         run: |
-          cat ./docker-compose.yml
+          docker-compose create redis 
           docker-compose start redis 
 
       - name: Set up Node.js
