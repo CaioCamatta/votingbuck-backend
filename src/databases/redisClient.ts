@@ -12,11 +12,4 @@ const client = createClient({ socket: { host: redisHost, port: redisPort } });
 client.on('error', (err) => logger.error('Error connecting to Redis.', err));
 client.connect();
 
-process.on('exit', shutdown);
-
-async function shutdown() {
-  logger.info('Closing Redis Client');
-  await client.quit();
-}
-
 export default client;
