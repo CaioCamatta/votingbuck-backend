@@ -91,14 +91,14 @@ jobs:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.AWS_EC2_PEM }}
-          envs: DATABASE_URL
+          envs: DATABASE_URL,REDIS_HOST,REDIS_PORT,REDIS_INDEX_NAME
           script: |
             ls -a
             cd api
-            echo "DATABASE_URL = $DATABASE_URL" \
-              "REDIS_HOST = $REDIS_HOST" \
-              "REDIS_PORT = $REDIS_PORT" \
-              "REDIS_INDEX_NAME = $REDIS_INDEX_NAME" > .env
+            echo "DATABASE_URL=$DATABASE_URL
+              REDIS_HOST=$REDIS_HOST
+              REDIS_PORT=$REDIS_PORT
+              REDIS_INDEX_NAME=$REDIS_INDEX_NAME" > .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -131,6 +131,6 @@ jobs:
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
-      
+
       - name: Create Redis index
         run: docker exec redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
