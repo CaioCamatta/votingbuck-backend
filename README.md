@@ -22,7 +22,27 @@ Based on this boilerplate: https://github.com/ljlm0402/typescript-express-starte
 
 ### Running the App
 
-Use either `npm run dev` (dev) or `sudo docker-compose up -d --build` (prod containers).
+#### Development
+
+First, make sure you have a local instance of Redis (and RedisSearch) running. You can do so with
+
+    sudo docker network create 4470-backend_backend
+    sudo docker-compose create redis
+    sudo docker-compose start redis
+
+Then, define all your environment variables. E.g., create a `.env` file containing:
+
+    PORT=3000
+    REDIS_HOST=127.0.0.1
+    REDIS_PORT=6379
+    REDIS_INDEX_NAME=index
+    DATABASE_URL="<secret>"
+
+Then, use either `npm run dev` (dev).
+
+#### Production
+
+Run `sudo docker-compose up -d --build` (prod containers)
 
 ### Database Changes:
 
@@ -34,7 +54,7 @@ According to the [Prisma docs](https://www.prisma.io/docs/getting-started/setup-
 
 ### RedisSearch
 
-To set up the RedisSearch index, do this only once:
+To set up the RedisSearch index, do this only once after starting the RedisSearch container:
 
     FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
 
@@ -54,7 +74,7 @@ Example
 
 See section below for information on Score.
 
-The index must be populated once every time the SQL database is change. (Or whenever it is empty)
+The index must be populated once every time the SQL database is changed (or whenever it is empty). A function exists in `search.service.ts` to do that.
 
 To search, use
 

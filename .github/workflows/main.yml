@@ -95,10 +95,10 @@ jobs:
           script: |
             ls -a
             cd api
-            echo "DATABASE_URL=$DATABASE_URL \
-              REDIS_HOST=$REDIS_HOST \
-              REDIS_PORT=$REDIS_PORT \
-              REDIS_INDEX_NAME=$REDIS_INDEX_NAME" > .env
+            echo "DATABASE_URL=$DATABASE_URL" > .env
+            echo "REDIS_HOST=$REDIS_HOST" >> .env
+            echo "REDIS_PORT=$REDIS_PORT" >> .env
+            echo "REDIS_INDEX_NAME=$REDIS_INDEX_NAME" >> .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -133,4 +133,6 @@ jobs:
             docker-compose up -d
 
       - name: Create Redis index
-        run: docker exec redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
+        run: |
+          sleep 8
+          docker exec redis redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
