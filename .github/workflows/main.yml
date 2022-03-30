@@ -48,6 +48,9 @@ jobs:
           docker-compose create redis 
           docker-compose start redis
 
+      - name: Create Redis index
+        run: sudo docker exec -it 6540a6e4d3ea redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
+
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
@@ -57,7 +60,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" REDIS_HOST="${{ secrets.REDIS_HOST }}" REDIS_PORT="${{ secrets.REDIS_PORT }}" REDIS_INDEX_NAME="${{ secrets.REDIS_INDEX_NAME }}" npm test
+        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" REDIS_HOST="127.0.0.1" REDIS_PORT="${{ secrets.REDIS_PORT }}" REDIS_INDEX_NAME="${{ secrets.REDIS_INDEX_NAME }}" npm test
 
   Deploy:
     needs: Test
@@ -80,6 +83,9 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_INDEX_NAME: ${{ secrets.REDIS_INDEX_NAME }}
 
         with:
           host: ${{ secrets.AWS_EC2_PUBLIC_DNS }}
@@ -89,7 +95,10 @@ jobs:
           script: |
             ls -a
             cd api
-            echo "DATABASE_URL = $DATABASE_URL" > .env
+            echo "DATABASE_URL = $DATABASE_URL" \
+              "REDIS_HOST = $REDIS_HOST" \
+              "REDIS_PORT = $REDIS_PORT" \
+              "REDIS_INDEX_NAME = $REDIS_INDEX_NAME" > .env
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
