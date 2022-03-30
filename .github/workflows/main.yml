@@ -95,9 +95,9 @@ jobs:
           script: |
             ls -a
             cd api
-            echo "DATABASE_URL=$DATABASE_URL
-              REDIS_HOST=$REDIS_HOST
-              REDIS_PORT=$REDIS_PORT
+            echo "DATABASE_URL=$DATABASE_URL \
+              REDIS_HOST=$REDIS_HOST \
+              REDIS_PORT=$REDIS_PORT \
               REDIS_INDEX_NAME=$REDIS_INDEX_NAME" > .env
 
       - name: Configure AWS credentials
