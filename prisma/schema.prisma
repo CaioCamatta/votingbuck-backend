@@ -7,6 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model committee {
+  id   String?
+  name String?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model committee_membership {
+  rec_id  String?
+  comm_id String?
+  rank    String?
+
+  @@ignore
+}
+
 model donation {
   id           String        @id
   org_id       String?
@@ -18,6 +35,26 @@ model donation {
   state        String
   organization organization? @relation(fields: [org_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   recipient    recipient     @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model leadership_role {
+  rec_id     String
+  title      String
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+  recipient  recipient @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([rec_id, title])
+}
+
+model office {
+  rec_id     String
+  title      String
+  start_date DateTime? @db.Date
+  end_date   DateTime? @db.Date
+  recipient  recipient @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([rec_id, title])
 }
 
 model organization {
