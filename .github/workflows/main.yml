@@ -56,15 +56,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set up environment variables
-        run: |
-          export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export REDIS_HOST=${{ secrets.REDIS_HOST }}
-          export REDIS_PORT=${{ secrets.REDIS_PORT }}
-          export REDIS_INDEX_NAME=${{ secrets.REDIS_INDEX_NAME }}
-
       - name: Run tests
-        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" npm test
+        run: DATABASE_URL="${{ secrets.DATABASE_URL }}" REDIS_HOST="${{ secrets.REDIS_HOST }}" REDIS_PORT="${{ secrets.REDIS_PORT }}" REDIS_INDEX_NAME="${{ secrets.REDIS_INDEX_NAME }}" npm test
 
   Deploy:
     needs: Test
