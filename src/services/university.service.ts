@@ -10,7 +10,7 @@ import {
 } from '@interfaces/university.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
-import prismaClient from '@databases/client';
+import prismaClient from '@databases/postgresClient';
 
 class UniversityService {
   public async getUniversityData(uniId: string, startDate: string, endDate: string): Promise<any> {
