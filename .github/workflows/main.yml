@@ -131,7 +131,3 @@ jobs:
             docker rmi $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
-
-      - name: Create Redis index
-        run: |
-          docker exec $(docker ps --filter ancestor=redislabs/redisearch --quiet) redis-cli FT.CREATE index ON HASH PREFIX 1 entity SCORE 0.000001 SCORE_FIELD score STOPWORDS 0 SCHEMA name TEXT NOSTEM SORTABLE category TAG  id NUMERIC
