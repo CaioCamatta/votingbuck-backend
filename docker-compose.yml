@@ -44,7 +44,6 @@ services:
     restart: 'unless-stopped'
     networks:
       - backend
-    profiles: ["test"]
 
 networks:
   backend:
