@@ -6,6 +6,9 @@ import {
   TopDonationsDollarsByIndustry,
   TopDonationsDollarsByCorporation,
   TopDonationsDollarsByUniversity,
+  TimeInCongress,
+  Leadership,
+  Committee,
 } from '@interfaces/recipient.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
@@ -27,6 +30,7 @@ class RecipientService {
     // Setup date objects to be used for query (start/end date for the requested period)
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
+    const currDateObj = new Date();
 
     // Then, proceed with queries
     const [
@@ -36,6 +40,9 @@ class RecipientService {
       topDonationsDollarsByIndustry,
       topDonationsDollarsByCorporation,
       topDonationsDollarsByUniversity,
+      timeInCongress,
+      leadership,
+      committee,
     ]: [
       DonationsByMonth,
       TopDonators,
@@ -43,6 +50,9 @@ class RecipientService {
       TopDonationsDollarsByIndustry,
       TopDonationsDollarsByCorporation,
       TopDonationsDollarsByUniversity,
+      TimeInCongress,
+      Leadership,
+      Committee,
     ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations received across time (grouped by month)
@@ -124,6 +134,43 @@ class RecipientService {
           ORDER BY dollars_donated DESC
           LIMIT ${5};`,
       ),
+      // Get politician's time in the congress
+      await prismaClient.$queryRaw<TimeInCongress>(
+        Prisma.sql`
+          SELECT
+            o.start_date as startDate,
+            o.end_date as endDate,
+            o.title as position
+          FROM office AS o
+            JOIN recipient AS r
+              ON o.rec_id = r.id
+          WHERE o.rec_id = ${recId};`,
+      ),
+      // Get politician's committee leadership positions
+      await prismaClient.$queryRaw<Leadership>(
+        Prisma.sql`
+          SELECT
+            l.start_date as startDate,
+            l.end_date as endDate,
+            l.title as title
+          FROM leadership_role AS l
+            JOIN recipient AS r
+              ON l.rec_id = r.id
+          WHERE l.rec_id = ${recId} AND l.start_date <= ${currDateObj} AND (l.end_date IS NULL OR l.end_date >= ${currDateObj});`,
+      ),
+      // Get politician's committee membership
+      await prismaClient.$queryRaw<Committee>(
+        Prisma.sql`
+          SELECT
+            c.name as name,
+            m.rank as rank
+          FROM committee AS c
+            JOIN committee_membership AS m
+              ON c.id = m.comm_id
+            JOIN recipient AS r
+              ON m.rec_id = r.id
+          WHERE r.id = ${recId};`,
+      ),
     ];
 
     return {
@@ -134,6 +181,9 @@ class RecipientService {
       topDonationsDollarsByIndustry,
       topDonationsDollarsByCorporation,
       topDonationsDollarsByUniversity,
+      timeInCongress,
+      leadership,
+      committee,
     };
   }
 }

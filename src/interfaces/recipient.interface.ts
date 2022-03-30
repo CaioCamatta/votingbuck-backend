@@ -33,3 +33,20 @@ export interface TopDonationsDollarsByUniversity {
   university: string;
   dollars_donated: number;
 }
+
+export interface TimeInCongress {
+  startDate: string;
+  endDate: string;
+  position: string;
+}
+
+export interface Leadership {
+  title: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface Committee {
+  name: string;
+  rank: number;
+}
