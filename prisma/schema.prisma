@@ -35,6 +35,10 @@ model donation {
   state        String
   organization organization? @relation(fields: [org_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   recipient    recipient     @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([date], map: "idx_date")
+  @@index([org_id], map: "idx_ord_id")
+  @@index([rec_id], map: "idx_rec_id")
 }
 
 model leadership_role {
@@ -75,9 +79,12 @@ model organization {
   reg_ind             Decimal?            @db.Decimal
   uni_enrollment_low  Decimal?            @db.Decimal
   uni_enrollment_high Decimal?            @db.Decimal
+  website             String?
   donation            donation[]
   recipient           recipient[]
   registered_voters   registered_voters[]
+
+  @@index([industry], map: "idx_industry")
 }
 
 model recipient {
@@ -100,43 +107,6 @@ model recipient {
   donation                 donation[]
   leadership_role          leadership_role[]
   office_officeTorecipient office[]
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model committee {
-  id   String?
-  name String?
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model committee_membership {
-  rec_id  String?
-  comm_id String?
-  rank    String?
-
-  @@ignore
-}
-
-model leadership_role {
-  rec_id     String
-  title      String
-  start_date DateTime? @db.Date
-  end_date   DateTime? @db.Date
-  recipient  recipient @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([rec_id, title])
-}
-
-model office {
-  rec_id     String
-  title      String
-  start_date DateTime? @db.Date
-  end_date   DateTime? @db.Date
-  recipient  recipient @relation(fields: [rec_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([rec_id, title])
 }
 
 model registered_voters {
