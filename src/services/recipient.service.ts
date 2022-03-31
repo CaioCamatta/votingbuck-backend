@@ -9,6 +9,7 @@ import {
   TimeInCongress,
   Leadership,
   Committee,
+  SchoolInfo,
 } from '@interfaces/recipient.interface';
 import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
@@ -43,6 +44,7 @@ class RecipientService {
       timeInCongress,
       leadership,
       committee,
+      schoolInfo,
     ]: [
       DonationsByMonth,
       TopDonators,
@@ -53,6 +55,7 @@ class RecipientService {
       TimeInCongress,
       Leadership,
       Committee,
+      SchoolInfo,
     ] = [
       // Note: Prisma's groupBy function is broken.
       // Donations received across time (grouped by month)
@@ -171,6 +174,17 @@ class RecipientService {
               ON m.rec_id = r.id
           WHERE r.id = ${recId};`,
       ),
+      // Get politician's committee membership
+      await prismaClient.$queryRaw<SchoolInfo>(
+        Prisma.sql`
+          SELECT
+            o.name as name,
+            o.uni_rank as rank
+          FROM organization AS o
+            JOIN recipient AS r
+              ON o.id = r.school
+          WHERE r.id = ${recId};`,
+      ),
     ];
 
     return {
@@ -184,6 +198,7 @@ class RecipientService {
       timeInCongress,
       leadership,
       committee,
+      schoolInfo,
     };
   }
 }

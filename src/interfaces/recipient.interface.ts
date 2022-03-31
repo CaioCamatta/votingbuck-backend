@@ -50,3 +50,8 @@ export interface Committee {
   name: string;
   rank: number;
 }
+
+export interface SchoolInfo {
+  name: string;
+  rank: number;
+}
