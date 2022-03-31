@@ -114,14 +114,15 @@ class OrganizationService {
         d.date as date,
         d.amount as dollars_donated
       FROM donation as d
-      WHERE d.org_id = ${orgId}`),
+      WHERE d.org_id = ${orgId}
+      ORDER BY d.date ASC;`),
       // Share of registered voters
       await prismaClient.$queryRaw<RegisteredVoters>(Prisma.sql`
       SELECT
         dem_count as democratic,
         rep_count as republican
       FROM registered_voters
-      WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()}`),
+      WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()};`),
     ];
 
     return {
