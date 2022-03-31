@@ -107,7 +107,8 @@ class OrganizationService {
       JOIN recipient as r 
         ON d.rec_id = r.id
       WHERE d.org_id = ${orgId} AND d.date BETWEEN ${startDateObj} AND ${endDateObj} AND r.ideology IS NOT NULL
-      GROUP BY ideology;`),
+      GROUP BY ideology
+      ORDER BY ideology ASC;`),
       // Total contributions by an organization in dollars and Total contributions by an organization by # of donations
       await prismaClient.$queryRaw<TotalContributionsDollar>(Prisma.sql`
       SELECT
