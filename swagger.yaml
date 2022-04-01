@@ -347,6 +347,102 @@ paths:
                         total_amount:
                           type: float
                           example: 12345.67
+                  ideologyDistribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ideology: 
+                          type: number
+                          example: 0.50
+                        count:
+                          type: number
+                          example: 5
+                  topDonationsDollarsByIndustry:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        industry: 
+                          type: string
+                          example: Tech
+                        dollars_donated:
+                          type: number
+                          example: 50000
+                  topDonationsDollarsByCorporation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        corporation: 
+                          type: string
+                          example: Tech
+                        dollars_donated:
+                          type: number
+                          example: 50000
+                  topDonationsDollarsByUniversity:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        university: 
+                          type: string
+                          example: Tech
+                        dollars_donated:
+                          type: number
+                          example: 50000
+                  timeInCongress:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        startDate: 
+                          type: string
+                          example: 2000-11-03
+                        endDate:
+                          type: string
+                          example: 2005-11-03
+                        position:
+                          type: string
+                          example: House
+                  leadership:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        startDate: 
+                          type: string
+                          example: 2000-11-03
+                        endDate:
+                          type: string
+                          example: 2005-11-03
+                        title:
+                          type: string
+                          example: Leader of House of Commons
+                  committee:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name: 
+                          type: string
+                          example: House Committee of Financial Services
+                        rank:
+                          type: number
+                          example: 5
+                  schoolInfo:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name: 
+                          type: string
+                          example: Harvard University
+                        rank:
+                          type: number
+                          example: 5
+        400:
+            description: 'Bad Request (start/end_date missing)'
         404:
           description: 'Not Found'
         500:
