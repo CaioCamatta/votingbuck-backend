@@ -1,11 +1,21 @@
 {
-    "env": "production",
-    "log": {
-        "format": "combined",
-        "dir": "../logs"
-    },
-    "cors": {
-        "origin": true,
-        "credentials": true
-    }
+  "env": "production",
+  "log": {
+    "format": "combined",
+    "dir": "../logs"
+  },
+  "cors": {
+    "origin": [
+      "http://localhost:3000",
+      "https://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://127.0.0.1:3000",
+      "http://votingbuck.com",
+      "https://votingbuck.com",
+      "http://api.votingbuck.com",
+      "https://api.votingbuck.com",
+      "http://dev.votingbuck.com",
+      "https://dev.votingbuck.com"
+    ]
+  }
 }
