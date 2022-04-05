@@ -447,3 +447,92 @@ paths:
           description: 'Not Found'
         500:
           description: 'Server Error'
+
+  /search/{query}:
+    get:
+      tags:
+        - Search
+      summary: Search for entity (universities, politicians, corporations)
+      produces:
+        - 'application/json'
+      parameters:
+        - name: query
+          in: path
+          description: Search query
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  politicians:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:pol:917
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Barton, Linus Joe
+                            category:
+                              type: string
+                              example: politician
+                            id:
+                              type: string
+                              example: 917
+                  corporates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:cor:629579103
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: NACCO INDUSTRIES  -CL A
+                            category:
+                              type: string
+                              example: corporate
+                            id:
+                              type: string
+                              example: 629579103
+                  universities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:uni:78
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: University of Illinois at Chicago
+                            category:
+                              type: string
+                              example: university
+                            id:
+                              type: string
+                              example: 78
+
+        400:
+          description: 'Bad Request'
+        404:
+          description: 'Not Found'
+        500:
+          description: 'Server Error'
