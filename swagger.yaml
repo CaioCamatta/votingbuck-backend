@@ -150,143 +150,143 @@ paths:
           description: 'Server Error'
 
   /universities/{id}:
-      get:
-        tags:
-          - University
-        summary: Find University data by Id and start_date/end_date of specified period
-        produces:
-          - 'application/json'
-        parameters:
-          - name: id
-            in: path
-            description: University Id
-            required: true
-            type: integer
-          - name: start_date
-            in: query
-            description: Start date for a political period in the form YYYY-MM-DD. E.g. 2016-11-03
-            required: true
-            type: date
-          - name: end_date
-            in: query
-            description: End date for a political period in the form YYYY-MM-DD. E.g. 2018-11-03
-            required: true
-            type: date
-        responses:
-          200:
-            description: 'OK'
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    uniInfo:
+    get:
+      tags:
+        - University
+      summary: Find University data by Id and start_date/end_date of specified period
+      produces:
+        - 'application/json'
+      parameters:
+        - name: id
+          in: path
+          description: University Id
+          required: true
+          type: integer
+        - name: start_date
+          in: query
+          description: Start date for a political period in the form YYYY-MM-DD. E.g. 2016-11-03
+          required: true
+          type: date
+        - name: end_date
+          in: query
+          description: End date for a political period in the form YYYY-MM-DD. E.g. 2018-11-03
+          required: true
+          type: date
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uniInfo:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+                      name:
+                        type: string
+                        example: Duke University
+                      industry:
+                        type: string
+                        example: school
+                  donationsByMonth:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        month_start_date:
+                          type: string
+                          example: 2012-12-01T00:00:00.000Z
+                        amount_donated:
+                          type: float
+                          example: 12345.67
+                  donationsByParty:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        party:
+                          type: string
+                          example: Independent
+                        total_amount:
+                          type: float
+                          example: 12345.67
+                  topRecipientsDollar:
+                    type: array
+                    items:
                       type: object
                       properties:
                         id:
-                          type: integer
-                          example: 42
+                          type: number
+                          example: 1
                         name:
                           type: string
-                          example: Duke University
-                        industry:
+                          example: Josh
+                        party:
                           type: string
-                          example: school
-                    donationsByMonth:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          month_start_date:
-                            type: string
-                            example: 2012-12-01T00:00:00.000Z
-                          amount_donated:
-                            type: float
-                            example: 12345.67
-                    donationsByParty:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          party:
-                            type: string
-                            example: Independent
-                          total_amount:
-                            type: float
-                            example: 12345.67
-                    topRecipientsDollar:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            example: 1
-                          name:
-                            type: string
-                            example: Josh
-                          party:
-                            type: string
-                            example: Independent
-                          amount_received:
-                            type: number
-                            example: 1234.56
-                    topRecipientsDonation:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: number
-                            example: 1
-                          name:
-                            type: string
-                            example: Josh
-                          party:
-                            type: string
-                            example: Independent
-                          donations_received:
-                            type: number
-                            example: 200
-                    ideologyDistribution:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          ideology:
-                            type: number
-                            example: -0.73
-                          dollars_donated:
-                            type: number
-                            example: 12345.67
-                    totalContributionsDollar:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          dollars_donated:
-                            type: number
-                            example: 1234.56
-                          date:
-                            type: string
-                            example: 2017-011-03
-                    registeredVoters:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          democratic:
-                            type: number
-                            example: 50
-                          republican:
-                            type: number
-                            example: 75
-          400:
-            description: 'Bad Request (start/end_date missing)'
-          404:
-            description: 'Not Found'
-          500:
-            description: 'Server Error'
+                          example: Independent
+                        amount_received:
+                          type: number
+                          example: 1234.56
+                  topRecipientsDonation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                          example: 1
+                        name:
+                          type: string
+                          example: Josh
+                        party:
+                          type: string
+                          example: Independent
+                        donations_received:
+                          type: number
+                          example: 200
+                  ideologyDistribution:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        ideology:
+                          type: number
+                          example: -0.73
+                        dollars_donated:
+                          type: number
+                          example: 12345.67
+                  totalContributionsDollar:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        dollars_donated:
+                          type: number
+                          example: 1234.56
+                        date:
+                          type: string
+                          example: 2017-011-03
+                  registeredVoters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        democratic:
+                          type: number
+                          example: 50
+                        republican:
+                          type: number
+                          example: 75
+        400:
+          description: 'Bad Request (start/end_date missing)'
+        404:
+          description: 'Not Found'
+        500:
+          description: 'Server Error'
 
   /recipients/{id}:
     get:
@@ -352,7 +352,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        ideology: 
+                        ideology:
                           type: number
                           example: 0.50
                         count:
@@ -363,7 +363,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        industry: 
+                        industry:
                           type: string
                           example: Tech
                         dollars_donated:
@@ -374,7 +374,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        corporation: 
+                        corporation:
                           type: string
                           example: Tech
                         dollars_donated:
@@ -385,7 +385,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        university: 
+                        university:
                           type: string
                           example: Tech
                         dollars_donated:
@@ -396,7 +396,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        startDate: 
+                        startDate:
                           type: string
                           example: 2000-11-03
                         endDate:
@@ -410,7 +410,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        startDate: 
+                        startDate:
                           type: string
                           example: 2000-11-03
                         endDate:
@@ -424,7 +424,7 @@ paths:
                     items:
                       type: object
                       properties:
-                        name: 
+                        name:
                           type: string
                           example: House Committee of Financial Services
                         rank:
@@ -435,14 +435,103 @@ paths:
                     items:
                       type: object
                       properties:
-                        name: 
+                        name:
                           type: string
                           example: Harvard University
                         rank:
                           type: number
                           example: 5
         400:
-            description: 'Bad Request (start/end_date missing)'
+          description: 'Bad Request (start/end_date missing)'
+        404:
+          description: 'Not Found'
+        500:
+          description: 'Server Error'
+
+  /search/{query}:
+    get:
+      tags:
+        - Search
+      summary: Search for entity (universities, politicians, corporations)
+      produces:
+        - 'application/json'
+      parameters:
+        - name: query
+          in: path
+          description: Search query
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  politicians:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:pol:917
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: Barton, Linus Joe
+                            category:
+                              type: string
+                              example: politician
+                            id:
+                              type: string
+                              example: 917
+                  corporates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:cor:629579103
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: NACCO INDUSTRIES  -CL A
+                            category:
+                              type: string
+                              example: corporate
+                            id:
+                              type: string
+                              example: 629579103
+                  universities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: entity:uni:78
+                        value:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                              example: University of Illinois at Chicago
+                            category:
+                              type: string
+                              example: university
+                            id:
+                              type: string
+                              example: 78
+
+        400:
+          description: 'Bad Request'
         404:
           description: 'Not Found'
         500:
