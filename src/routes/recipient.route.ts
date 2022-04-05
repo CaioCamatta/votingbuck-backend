@@ -13,6 +13,7 @@ class RecipientRoute implements Routes {
 
   private initializeRoutes() {
     // GET data to populate a recipient's dashboard.
+    this.router.get(`${this.path}/list`, this.recController.getRecipientList);
     this.router.get(`${this.path}/:id(\\w+)`, this.recController.getRecipientData);
   }
 }

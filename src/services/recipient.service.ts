@@ -201,6 +201,41 @@ class RecipientService {
       schoolInfo,
     };
   }
+
+  public async getRecipientList(states: string | null, sortField: string | null, order: string | null): Promise<any> {
+    // Form the query object
+    const query: any = {
+      take: 20,
+      where: {},
+      select: {
+        id: true,
+        name: true,
+        state: true,
+      },
+    };
+
+    // Add states to the query
+    if (states) {
+      const statesArr = states.split(',');
+      if (!query.where.OR) {
+        query.where.OR = [];
+      }
+      for (const state of statesArr) {
+        query.where.OR.push({ state: state });
+      }
+    }
+
+    // Add sorting to the query
+    if (sortField) {
+      if (!query.where.orderBy) {
+        query.orderBy = [];
+      }
+      query.orderBy.push({ [sortField]: order === 'asc' ? 'asc' : 'desc' });
+    }
+
+    const recipients: Recipient[] = await prismaClient.recipient.findMany(query);
+    return { recipients };
+  }
 }
 
 export default RecipientService;

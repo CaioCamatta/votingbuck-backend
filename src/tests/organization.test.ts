@@ -19,3 +19,23 @@ describe('Testing Organizations', () => {
     });
   });
 });
+
+describe('Testing Organizations List', () => {
+  describe('[GET] /organizations/list?industries=Railroads,Leisure%20Facilities&sortField=name&order=asc', () => {
+    it('returns status 200 and correct content', async () => {
+      const orgRoute = new OrganizationRoute();
+      const app = new App([orgRoute]);
+
+      const response = await request(app.getServer()).get(
+        `${orgRoute.path}/organizations/list?industries=Railroads,Leisure%20Facilities&sortField=name&order=asc`,
+      );
+
+      for (const org of response.body.organizations) {
+        expect('id' in org).toEqual(true);
+        expect('name' in org).toEqual(true);
+        expect('industry' in org).toEqual(true);
+      }
+      expect(response.status).toEqual(200);
+    });
+  });
+});

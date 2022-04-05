@@ -19,3 +19,21 @@ describe('Testing Universities', () => {
     });
   });
 });
+
+describe('Testing Universities List', () => {
+  describe('[GET] /universities/list?states=MI,NY&sortField=name&order=asc', () => {
+    it('returns status 200 and correct content', async () => {
+      const uniRoute = new UniversityRoute();
+      const app = new App([uniRoute]);
+
+      const response = await request(app.getServer()).get(`${uniRoute.path}/universities/list?states=MI,NY&sortField=name&order=asc`);
+
+      for (const org of response.body.universities) {
+        expect('id' in org).toEqual(true);
+        expect('name' in org).toEqual(true);
+        expect('location' in org).toEqual(true);
+      }
+      expect(response.status).toEqual(200);
+    });
+  });
+});
