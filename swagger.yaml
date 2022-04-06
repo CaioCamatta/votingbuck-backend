@@ -198,54 +198,6 @@ paths:
             description: 'Server Error'
 
   /universities/{id}:
-      get:
-        tags:
-          - Organization
-        summary: Get a list of organizations based on parameters
-        produces:
-          - 'application/json'
-        parameters:
-          - name: industries
-            in: query
-            description: List of indsutries to filter by (e.g. Railroads,Building Products)
-            required: false
-            type: string
-          - name: sortField
-            in: query
-            description: Field in the companies table to sort by
-            required: false
-            type: string
-          - name: order
-            in: query
-            description: Specify whether to sort in 'asc' or 'desc' order
-            required: false
-            type: string
-        responses:
-          200:
-            description: 'OK'
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    organization:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                            example: "42"
-                          name:
-                            type: string
-                            example: CONRAIL INC
-                          industry:
-                            type: string
-                            example: Railroads
-          500:
-            description: 'Server Error'
-
-  /universities/{id}:
     get:
       tags:
         - University
@@ -383,54 +335,6 @@ paths:
           description: 'Not Found'
         500:
           description: 'Server Error'
-
-  /universities/list:
-      get:
-        tags:
-          - University
-        summary: Get a list of universities based on parameters
-        produces:
-          - 'application/json'
-        parameters:
-          - name: states
-            in: query
-            description: List of states to filter by (e.g. "MI,NY,MA")
-            required: false
-            type: string
-          - name: sortField
-            in: query
-            description: Field in the universities table to sort by
-            required: false
-            type: string
-          - name: order
-            in: query
-            description: Specify whether to sort in 'asc' or 'desc' order
-            required: false
-            type: string
-        responses:
-          200:
-            description: 'OK'
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    organization:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                            example: "42"
-                          name:
-                            type: string
-                            example: Harvard University
-                          state:
-                            type: string
-                            example: MA
-          500:
-            description: 'Server Error'
 
   /universities/list:
       get:
@@ -649,6 +553,54 @@ paths:
         500:
           description: 'Server Error'
 
+  /recipients/list:
+    get:
+      tags:
+        - Recipient
+      summary: Get a list of recipients based on parameters
+      produces:
+        - 'application/json'
+      parameters:
+        - name: states
+          in: query
+          description: List of states to filter by (e.g. "MI,NY,MA")
+          required: false
+          type: string
+        - name: sortField
+          in: query
+          description: Field in the politicians table to sort by
+          required: false
+          type: string
+        - name: order
+          in: query
+          description: Specify whether to sort in 'asc' or 'desc' order
+          required: false
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  organization:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "42"
+                        name:
+                          type: string
+                          example: Donald trump
+                        state:
+                          type: string
+                          example: MI
+        500:
+          description: 'Server Error'
+
   /search/{query}:
     get:
       tags:
@@ -737,51 +689,3 @@ paths:
           description: 'Not Found'
         500:
           description: 'Server Error'
-
-  /recipients/list:
-      get:
-        tags:
-          - Recipient
-        summary: Get a list of recipients based on parameters
-        produces:
-          - 'application/json'
-        parameters:
-          - name: states
-            in: query
-            description: List of states to filter by (e.g. "MI,NY,MA")
-            required: false
-            type: string
-          - name: sortField
-            in: query
-            description: Field in the politicians table to sort by
-            required: false
-            type: string
-          - name: order
-            in: query
-            description: Specify whether to sort in 'asc' or 'desc' order
-            required: false
-            type: string
-        responses:
-          200:
-            description: 'OK'
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    organization:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          id:
-                            type: string
-                            example: "42"
-                          name:
-                            type: string
-                            example: Donald trump
-                          state:
-                            type: string
-                            example: MI
-          500:
-            description: 'Server Error'
