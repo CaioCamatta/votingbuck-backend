@@ -138,7 +138,7 @@ class UniversityService {
     };
   }
 
-  public async getUniversityList(states: string | null, sortField: string | null, order: string | null): Promise<any> {
+  public async getUniversityList(states: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
     const stateCodetoName = {
       AL: 'Alabama',
       AK: 'Alaska',
@@ -192,12 +192,14 @@ class UniversityService {
       WY: 'Wyoming',
     };
 
+    const numResults = 20; // Number of results for query to return
+
     // Form the query object
     const query: any = {
       where: {
         industry: 'School',
       },
-      take: 20,
+      take: numResults,
       select: {
         id: true,
         name: true,

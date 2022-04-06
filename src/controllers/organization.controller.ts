@@ -25,20 +25,9 @@ class OrganizationController {
   public getOrganizationList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       // Unpack the query parameters
-      let industries: string | null = null;
-      let sortField: string | null = null;
-      let order: string | null = null;
-      if (req.query.industries) {
-        industries = req.query.industries.toString();
-      }
-
-      if (req.query.sortField) {
-        sortField = req.query.sortField.toString();
-      }
-
-      if (req.query.order) {
-        order = req.query.order.toString();
-      }
+      const industries: string | undefined = req.query.industries?.toString();
+      const sortField: string | undefined = req.query.sortField?.toString();
+      const order: string | undefined = req.query.order?.toString();
 
       const orgList = await this.organizationService.getOrganizationList(industries, sortField, order);
       res.status(200).json(orgList);

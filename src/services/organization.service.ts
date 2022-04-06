@@ -138,7 +138,9 @@ class OrganizationService {
     };
   }
 
-  public async getOrganizationList(industries: string | null, sortField: string | null, order: string | null): Promise<any> {
+  public async getOrganizationList(industries: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
+    const numResults = 20; // Number of results for query to return
+
     // Form the query object
     const query: any = {
       where: {
@@ -148,7 +150,7 @@ class OrganizationService {
           },
         ],
       },
-      take: 20,
+      take: numResults,
       select: {
         id: true,
         name: true,

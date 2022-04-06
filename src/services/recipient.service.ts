@@ -202,10 +202,12 @@ class RecipientService {
     };
   }
 
-  public async getRecipientList(states: string | null, sortField: string | null, order: string | null): Promise<any> {
+  public async getRecipientList(states: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
+    const numResults = 20; // Number of results for query to return
+
     // Form the query object
     const query: any = {
-      take: 20,
+      take: numResults,
       where: {},
       select: {
         id: true,

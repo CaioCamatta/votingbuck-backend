@@ -25,20 +25,9 @@ class RecipientController {
   public getRecipientList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       // Unpack the query parameters
-      let states: string | null = null;
-      let sortField: string | null = null;
-      let order: string | null = null;
-      if (req.query.states) {
-        states = req.query.states.toString();
-      }
-
-      if (req.query.sortField) {
-        sortField = req.query.sortField.toString();
-      }
-
-      if (req.query.order) {
-        order = req.query.order.toString();
-      }
+      const states: string | undefined = req.query.states?.toString();
+      const sortField: string | undefined = req.query.sortField?.toString();
+      const order: string | undefined = req.query.order?.toString();
 
       const orgList = await this.recipientService.getRecipientList(states, sortField, order);
       res.status(200).json(orgList);

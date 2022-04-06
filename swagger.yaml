@@ -158,10 +158,10 @@ paths:
           - 'application/json'
         parameters:
           - name: industries
-            in: path
-            description: Filter for industries that the returned companies are in
+            in: query
+            description: Industries that the companies are in (e.g. Railroads,Building Products)
             required: false
-            type: comma separated list of strings
+            type: string
           - name: sortField
             in: query
             description: Field in the companies table to sort by
@@ -345,10 +345,10 @@ paths:
           - 'application/json'
         parameters:
           - name: states
-            in: path
-            description: Filter for states that the returned universities are in
+            in: query
+            description: States that the universities are located (e.g. "MI,NY,MA")
             required: false
-            type: comma separated list of strings
+            type: string
           - name: sortField
             in: query
             description: Field in the universities table to sort by
@@ -562,10 +562,10 @@ paths:
           - 'application/json'
         parameters:
           - name: states
-            in: path
-            description: Filter for states that the returned politicians are in
+            in: query
+            description: States that the politicians are located (e.g. "MI,NY,MA")
             required: false
-            type: comma separated list of strings
+            type: string
           - name: sortField
             in: query
             description: Field in the politicians table to sort by
