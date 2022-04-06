@@ -26,7 +26,7 @@ describe('Testing Universities List', () => {
       const uniRoute = new UniversityRoute();
       const app = new App([uniRoute]);
 
-      const response = await request(app.getServer()).get(`${uniRoute.path}/universities/list?states=MI,NY&sortField=name&order=asc`);
+      const response = await request(app.getServer()).get(`${uniRoute.path}/list?states=MI,NY&sortField=name&order=asc`);
 
       for (const org of response.body.universities) {
         expect('id' in org).toEqual(true);

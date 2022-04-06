@@ -26,9 +26,7 @@ describe('Testing Organizations List', () => {
       const orgRoute = new OrganizationRoute();
       const app = new App([orgRoute]);
 
-      const response = await request(app.getServer()).get(
-        `${orgRoute.path}/organizations/list?industries=Railroads,Leisure%20Facilities&sortField=name&order=asc`,
-      );
+      const response = await request(app.getServer()).get(`${orgRoute.path}/list?industries=Railroads,Leisure%20Facilities&sortField=name&order=asc`);
 
       for (const org of response.body.organizations) {
         expect('id' in org).toEqual(true);

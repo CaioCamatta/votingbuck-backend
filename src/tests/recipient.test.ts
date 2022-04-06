@@ -26,7 +26,7 @@ describe('Testing Recipients List', () => {
       const recRoute = new RecipientRoute();
       const app = new App([recRoute]);
 
-      const response = await request(app.getServer()).get(`${recRoute.path}/recipients/list?states=MI,NY&sortField=name&order=asc`);
+      const response = await request(app.getServer()).get(`${recRoute.path}/list?states=MI,NY&sortField=name&order=asc`);
 
       for (const rec of response.body.recipients) {
         expect('id' in rec).toEqual(true);
