@@ -13,6 +13,7 @@ class OrganizationRoute implements Routes {
 
   private initializeRoutes() {
     // GET data to populate an organization's dashboard.
+    this.router.get(`${this.path}/list`, this.orgController.getOrganizationList);
     this.router.get(`${this.path}/:id(\\w+)`, this.orgController.getOrganizationData);
   }
 }

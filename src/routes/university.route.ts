@@ -13,6 +13,7 @@ class UniversityRoute implements Routes {
 
   private initializeRoutes() {
     // GET data to populate a university's dashboard.
+    this.router.get(`${this.path}/list`, this.uniController.getUniversityList);
     this.router.get(`${this.path}/:id(\\w+)`, this.uniController.getUniversityData);
   }
 }

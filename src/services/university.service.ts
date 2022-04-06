@@ -12,6 +12,59 @@ import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/postgresClient';
 
+const STATECODETONAME = {
+  AL: 'Alabama',
+  AK: 'Alaska',
+  AZ: 'Arizona',
+  AR: 'Arkansas',
+  CA: 'California',
+  CO: 'Colorado',
+  CT: 'Connecticut',
+  DE: 'Delaware',
+  FL: 'Florida',
+  GA: 'Georgia',
+  HI: 'Hawaii',
+  ID: 'Idaho',
+  IL: 'Illinois',
+  IN: 'Indiana',
+  IA: 'Iowa',
+  KS: 'Kansas',
+  KY: 'Kentucky',
+  LA: 'Louisiana',
+  ME: 'Maine',
+  MD: 'Maryland',
+  MA: 'Massachusetts',
+  MI: 'Michigan',
+  MN: 'Minnesota',
+  MS: 'Mississippi',
+  MO: 'Missouri',
+  MT: 'Montana',
+  NE: 'Nebraska',
+  NV: 'Nevada',
+  NH: 'New Hampshire',
+  NJ: 'New Jersey',
+  NM: 'New Mexico',
+  NY: 'New York',
+  NC: 'North Carolina',
+  ND: 'North Dakota',
+  OH: 'Ohio',
+  OK: 'Oklahoma',
+  OR: 'Oregon',
+  PA: 'Pennsylvania',
+  RI: 'Rhode Island',
+  SC: 'South Carolina',
+  SD: 'South Dakota',
+  TN: 'Tennessee',
+  TX: 'Texas',
+  UT: 'Utah',
+  VT: 'Vermont',
+  VA: 'Virginia',
+  WA: 'Washington',
+  WV: 'West Virginia',
+  WI: 'Wisconsin',
+  WY: 'Wyoming',
+};
+
 class UniversityService {
   public async getUniversityData(uniId: string, startDate: string, endDate: string): Promise<any> {
     // First check if uni exists (fetch uniinfo such as name, industry)
@@ -136,6 +189,38 @@ class UniversityService {
       totalContributionsDollar,
       registeredVoters,
     };
+  }
+
+  public async getUniversityList(states?: string, sortField?: string, order?: string): Promise<any> {
+    const numResults = 20; // Number of results for query to return
+
+    // Form the query object
+    const query: any = {
+      where: {
+        industry: 'School',
+      },
+      take: numResults,
+      select: {
+        id: true,
+        name: true,
+        location: true,
+      },
+    };
+
+    // Add states to the query
+    if (states) {
+      query.where.OR = states.split(',').map((state) => {
+        return { location: { endsWith: STATECODETONAME[state] } };
+      });
+    }
+
+    // Add sorting to the query
+    if (sortField) {
+      query.orderBy = [{ [sortField]: order === 'asc' ? 'asc' : 'desc' }];
+    }
+
+    const universities: University[] = await prismaClient.organization.findMany(query);
+    return { universities };
   }
 }
 

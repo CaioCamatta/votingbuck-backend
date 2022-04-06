@@ -21,6 +21,20 @@ class UniversityController {
       next(error);
     }
   };
+
+  public getUniversityList = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      // Unpack the query parameters
+      const states: string | undefined = req.query.states?.toString();
+      const sortField: string | undefined = req.query.sortField?.toString();
+      const order: string | undefined = req.query.order?.toString();
+
+      const orgList = await this.universityService.getUniversityList(states, sortField, order);
+      res.status(200).json(orgList);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default UniversityController;
