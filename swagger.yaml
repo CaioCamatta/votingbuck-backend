@@ -159,7 +159,7 @@ paths:
         parameters:
           - name: industries
             in: query
-            description: Industries that the companies are in (e.g. Railroads,Building Products)
+            description: List of indsutries to filter by (e.g. Railroads,Building Products)
             required: false
             type: string
           - name: sortField
@@ -346,7 +346,7 @@ paths:
         parameters:
           - name: states
             in: query
-            description: States that the universities are located (e.g. "MI,NY,MA")
+            description: List of states to filter by (e.g. "MI,NY,MA")
             required: false
             type: string
           - name: sortField
@@ -563,7 +563,7 @@ paths:
         parameters:
           - name: states
             in: query
-            description: States that the politicians are located (e.g. "MI,NY,MA")
+            description: List of states to filter by (e.g. "MI,NY,MA")
             required: false
             type: string
           - name: sortField
