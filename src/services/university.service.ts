@@ -12,6 +12,59 @@ import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/postgresClient';
 
+const stateCodetoName = {
+  AL: 'Alabama',
+  AK: 'Alaska',
+  AZ: 'Arizona',
+  AR: 'Arkansas',
+  CA: 'California',
+  CO: 'Colorado',
+  CT: 'Connecticut',
+  DE: 'Delaware',
+  FL: 'Florida',
+  GA: 'Georgia',
+  HI: 'Hawaii',
+  ID: 'Idaho',
+  IL: 'Illinois',
+  IN: 'Indiana',
+  IA: 'Iowa',
+  KS: 'Kansas',
+  KY: 'Kentucky',
+  LA: 'Louisiana',
+  ME: 'Maine',
+  MD: 'Maryland',
+  MA: 'Massachusetts',
+  MI: 'Michigan',
+  MN: 'Minnesota',
+  MS: 'Mississippi',
+  MO: 'Missouri',
+  MT: 'Montana',
+  NE: 'Nebraska',
+  NV: 'Nevada',
+  NH: 'New Hampshire',
+  NJ: 'New Jersey',
+  NM: 'New Mexico',
+  NY: 'New York',
+  NC: 'North Carolina',
+  ND: 'North Dakota',
+  OH: 'Ohio',
+  OK: 'Oklahoma',
+  OR: 'Oregon',
+  PA: 'Pennsylvania',
+  RI: 'Rhode Island',
+  SC: 'South Carolina',
+  SD: 'South Dakota',
+  TN: 'Tennessee',
+  TX: 'Texas',
+  UT: 'Utah',
+  VT: 'Vermont',
+  VA: 'Virginia',
+  WA: 'Washington',
+  WV: 'West Virginia',
+  WI: 'Wisconsin',
+  WY: 'Wyoming',
+};
+
 class UniversityService {
   public async getUniversityData(uniId: string, startDate: string, endDate: string): Promise<any> {
     // First check if uni exists (fetch uniinfo such as name, industry)
@@ -138,60 +191,7 @@ class UniversityService {
     };
   }
 
-  public async getUniversityList(states: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
-    const stateCodetoName = {
-      AL: 'Alabama',
-      AK: 'Alaska',
-      AZ: 'Arizona',
-      AR: 'Arkansas',
-      CA: 'California',
-      CO: 'Colorado',
-      CT: 'Connecticut',
-      DE: 'Delaware',
-      FL: 'Florida',
-      GA: 'Georgia',
-      HI: 'Hawaii',
-      ID: 'Idaho',
-      IL: 'Illinois',
-      IN: 'Indiana',
-      IA: 'Iowa',
-      KS: 'Kansas',
-      KY: 'Kentucky',
-      LA: 'Louisiana',
-      ME: 'Maine',
-      MD: 'Maryland',
-      MA: 'Massachusetts',
-      MI: 'Michigan',
-      MN: 'Minnesota',
-      MS: 'Mississippi',
-      MO: 'Missouri',
-      MT: 'Montana',
-      NE: 'Nebraska',
-      NV: 'Nevada',
-      NH: 'New Hampshire',
-      NJ: 'New Jersey',
-      NM: 'New Mexico',
-      NY: 'New York',
-      NC: 'North Carolina',
-      ND: 'North Dakota',
-      OH: 'Ohio',
-      OK: 'Oklahoma',
-      OR: 'Oregon',
-      PA: 'Pennsylvania',
-      RI: 'Rhode Island',
-      SC: 'South Carolina',
-      SD: 'South Dakota',
-      TN: 'Tennessee',
-      TX: 'Texas',
-      UT: 'Utah',
-      VT: 'Vermont',
-      VA: 'Virginia',
-      WA: 'Washington',
-      WV: 'West Virginia',
-      WI: 'Wisconsin',
-      WY: 'Wyoming',
-    };
-
+  public async getUniversityList(states?: string, sortField?: string, order?: string): Promise<any> {
     const numResults = 20; // Number of results for query to return
 
     // Form the query object
@@ -209,21 +209,14 @@ class UniversityService {
 
     // Add states to the query
     if (states) {
-      const statesArr = states.split(',');
-      if (!query.where.OR) {
-        query.where.OR = [];
-      }
-      for (const state of statesArr) {
-        query.where.OR.push({ location: { endsWith: stateCodetoName[state] } });
-      }
+      query.where.OR = states.split(',').map((state) => {
+        return { location: { endsWith: stateCodetoName[state] } };
+      });
     }
 
     // Add sorting to the query
     if (sortField) {
-      if (!query.where.orderBy) {
-        query.orderBy = [];
-      }
-      query.orderBy.push({ [sortField]: order === 'asc' ? 'asc' : 'desc' });
+      query.orderBy = [{ [sortField]: order === 'asc' ? 'asc' : 'desc' }];
     }
 
     const universities: University[] = await prismaClient.organization.findMany(query);

@@ -202,7 +202,7 @@ class RecipientService {
     };
   }
 
-  public async getRecipientList(states: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
+  public async getRecipientList(states?: string, sortField?: string, order?: string): Promise<any> {
     const numResults = 20; // Number of results for query to return
 
     // Form the query object
@@ -218,21 +218,14 @@ class RecipientService {
 
     // Add states to the query
     if (states) {
-      const statesArr = states.split(',');
-      if (!query.where.OR) {
-        query.where.OR = [];
-      }
-      for (const state of statesArr) {
-        query.where.OR.push({ state: state });
-      }
+      query.where.OR = states.split(',').map((state) => {
+        return { state: state };
+      });
     }
 
     // Add sorting to the query
     if (sortField) {
-      if (!query.where.orderBy) {
-        query.orderBy = [];
-      }
-      query.orderBy.push({ [sortField]: order === 'asc' ? 'asc' : 'desc' });
+      query.orderBy = [{ [sortField]: order === 'asc' ? 'asc' : 'desc' }];
     }
 
     const recipients: Recipient[] = await prismaClient.recipient.findMany(query);

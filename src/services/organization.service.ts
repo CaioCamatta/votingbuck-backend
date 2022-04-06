@@ -138,7 +138,7 @@ class OrganizationService {
     };
   }
 
-  public async getOrganizationList(industries: string | undefined, sortField: string | undefined, order: string | undefined): Promise<any> {
+  public async getOrganizationList(industries?: string, sortField?: string, order?: string): Promise<any> {
     const numResults = 20; // Number of results for query to return
 
     // Form the query object
@@ -160,21 +160,14 @@ class OrganizationService {
 
     // Add industries to the query
     if (industries) {
-      const industryArr = industries.split(',');
-      if (!query.where.OR) {
-        query.where.OR = [];
-      }
-      for (const industry of industryArr) {
-        query.where.OR.push({ industry: industry });
-      }
+      query.where.OR = industries.split(',').map((industry) => {
+        return { industry: industry };
+      });
     }
 
     // Add sorting to the query
     if (sortField) {
-      if (!query.where.orderBy) {
-        query.orderBy = [];
-      }
-      query.orderBy.push({ [sortField]: order === 'asc' ? 'asc' : 'desc' });
+      query.orderBy = [{ [sortField]: order === 'asc' ? 'asc' : 'desc' }];
     }
 
     const organizations: Organization[] = await prismaClient.organization.findMany(query);
