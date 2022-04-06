@@ -12,7 +12,7 @@ import { HttpException } from '@exceptions/HttpException';
 import { Prisma } from '@prisma/client';
 import prismaClient from '@databases/postgresClient';
 
-const stateCodetoName = {
+const STATECODETONAME = {
   AL: 'Alabama',
   AK: 'Alaska',
   AZ: 'Arizona',
@@ -210,7 +210,7 @@ class UniversityService {
     // Add states to the query
     if (states) {
       query.where.OR = states.split(',').map((state) => {
-        return { location: { endsWith: stateCodetoName[state] } };
+        return { location: { endsWith: STATECODETONAME[state] } };
       });
     }
 
