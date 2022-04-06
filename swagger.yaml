@@ -682,7 +682,6 @@ paths:
                             id:
                               type: string
                               example: 78
-
         400:
           description: 'Bad Request'
         404:
