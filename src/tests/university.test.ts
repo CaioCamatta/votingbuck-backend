@@ -7,12 +7,12 @@ afterAll(async () => {
 });
 
 describe('Testing Universities', () => {
-  describe('[GET] /universities/3?start_date=2017-11-03&end_date=2018-11-03', () => {
+  describe('[GET] university data for id 3 from the 2017-2018 political period', () => {
     it('returns status 200 and correct content', async () => {
       const uniRoute = new UniversityRoute();
       const app = new App([uniRoute]);
 
-      const response = await request(app.getServer()).get(`${uniRoute.path}/3?start_date=2017-11-03&end_date=2018-11-03`);
+      const response = await request(app.getServer()).get(`${uniRoute.path}/3?start_date=2016-11-10&end_date=2018-11-10`);
 
       expect(response.status).toEqual(200);
       expect(response.body.uniInfo.id).toEqual('3');
@@ -21,7 +21,7 @@ describe('Testing Universities', () => {
 });
 
 describe('Testing Universities List', () => {
-  describe('[GET] /universities/list?states=MI,NY&sortField=name&order=asc', () => {
+  describe('[GET] universities from the states MI and NY, sorted by name in ascending order', () => {
     it('returns status 200 and correct content', async () => {
       const uniRoute = new UniversityRoute();
       const app = new App([uniRoute]);
