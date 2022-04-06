@@ -46,6 +46,7 @@ class SearchService {
       }
     } catch (error) {
       // If index doesn't exist or is empty, we populate it
+      logger.info(error);
     }
 
     // Get necessary data
