@@ -117,7 +117,7 @@ class SearchService {
 
     // Add everything to Redis
     universities.forEach(async (uni) => {
-      const score = this._score(parseInt(uni.uni_rank as any), avgUniRanking as any);
+      const score = this._score(-parseInt(uni.uni_rank as any), avgUniRanking as any);
       await redisClient
         .multi()
         .hSet(`entity:uni:${uni.id}`, 'name', uni.name)
