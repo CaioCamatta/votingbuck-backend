@@ -176,7 +176,7 @@ class UniversityService {
         dem_count as democratic,
         rep_count as republican
       FROM registered_voters
-      WHERE org_id = ${uniId} AND year = ${endDateObj.getFullYear()};`),
+      WHERE org_id = ${uniId};`),
     ];
 
     return {
