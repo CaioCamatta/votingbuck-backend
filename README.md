@@ -173,15 +173,17 @@ To populate the RedisSearch index, a function exists in search.services code tha
 
 ### Scoring function
 
-We want to rank entities (pol/org/unis) higher if they are more likely to be one that is interesting. For example, a popular politician should rank higher in search results than one that isn't well-known. To achieve that, we use our own scoring function.
+We want to rank entities (pol/org/unis) higher if they are more likely to be one that is interesting. A popular politician should rank higher in search results than one that isn't well-known. For example, when a user types "b" into the search bar, one the top results should likely be Biden, as there is a high chance that is what they want to see. To achieve this, we use a custom scoring function.
+
+This custom scoring function is a replacement to, say, TF-IDF (term frequency-inverse document frequency).
 
 Each one of the three categories of entities has its own scoring criteria
 
-- Universities: univeristy ranking
+- Universities: university ranking
 - Corporates: number of revolvers
 - Politicians: wealth
 
-These are not perfect criteria, but they are all attributes of the `organization` or `politician` table, so easy to fetch. Ideally, we would want the score to be the amount of money an entity has donated (in the case of corporates or unis) or received (politicians), but that is a wish-list suggestion for the future.
+These are not perfect criteria, but they are all attributes of the `organization` or `politician` table, so they easy to fetch. Ideally, we would want the score to use more relevant criteria, such as the amount of money an entity has donated (in the case of corporates or unis) or received (politicians), but that is a suggestion for the future.
 
 The formula to calculate the scores for each entity type is:
 
@@ -189,7 +191,7 @@ The formula to calculate the scores for each entity type is:
 - Corporates: `1 - (1/(1 + x/<AVERAGE number of revolvers, e.g. 100>)) × 0.9`
 - Politicians: `1 - (1/(1 + x/<AVERAGE wealth, e.g. 100>)) × 0.9`
 
-Scores must be between 0.o and 1.0. The above functions map everything to in the [0, 1.0) range.
+Scores must be between 0.o and 1.0. The above functions map everything to the (0.1, 1.0) range.
 
 ## Backend deployment
 
