@@ -123,7 +123,7 @@ class OrganizationService {
         dem_count as democratic,
         rep_count as republican
       FROM registered_voters
-      WHERE org_id = ${orgId} AND year = ${endDateObj.getFullYear()};`),
+      WHERE org_id = ${orgId};`),
     ];
 
     return {
@@ -139,7 +139,7 @@ class OrganizationService {
   }
 
   public async getOrganizationList(industries?: string, sortField?: string, order?: string): Promise<any> {
-    const numResults = 20; // Number of results for query to return
+    const numResults = 80; // Number of results for query to return
 
     // Form the query object
     const query: any = {
